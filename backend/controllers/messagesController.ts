@@ -21,13 +21,10 @@ interface IMessage {
     userId: string;
     body: string;
     timestamp: number;
+    chatId: String;
 }
-/* 
-PUSHER_APP_ID = "1581720"
-PUSHER_KEY = "26e53df8257fd5fd94ab"
-PUSHER_SECRET = "7ee14c449330f322ef94"
-PUSHER_CLUSTER = "eu"
-*/
+
+
 const newMessage = async (req: TypedRequestBody<{ body: string, userId: string, chatId: string }>, res: Express.Response) => {
     if (!req.body?.body || !req.body?.userId || !req.params?.chatId) return res.status(400).json({ message: "Error. Please try again later." })
     const { body, userId } = req.body
@@ -36,7 +33,8 @@ const newMessage = async (req: TypedRequestBody<{ body: string, userId: string, 
     const newMessage: IMessage = {
         userId,
         body,
-        timestamp: Date.now()
+        timestamp: Date.now(),
+        chatId
     }
 
     try {
@@ -45,6 +43,7 @@ const newMessage = async (req: TypedRequestBody<{ body: string, userId: string, 
         pusher.trigger(chatId, "new-message", {
             newMessage
         });
+
         return res.status(201).json({ message: 'message sent' })
     } catch (err) {
         let message
@@ -56,5 +55,5 @@ const newMessage = async (req: TypedRequestBody<{ body: string, userId: string, 
 }
 
 export {
-    newMessage
+    newMessage,
 }

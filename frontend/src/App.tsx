@@ -4,9 +4,11 @@ import ContactList from "./features/contacts/ContactList";
 import { Routes, Route } from 'react-router-dom'
 import Layout from "./assets/Layout";
 import Login from "./features/auth/Login";
+import PersistCredentials from "./features/auth/persistCredentials";
+import NewChat from "./features/chat/newChat";
 
 function App() {
-
+  
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
@@ -14,10 +16,13 @@ function App() {
           <Route index element={<Login />} />
           <Route path="google" element={<Login />} />
         </Route>
-        <Route index element={<ChatArea />} />
-        <Route path="chat">
-          <Route path=":chatId">
-            <Route index element={<ChatArea />} />
+        <Route element={<PersistCredentials />}>
+          <Route index element={<ChatArea />} />
+          <Route path="chat">
+            <Route path=":chatId">
+              <Route index element={<ChatArea />} />
+            </Route>
+            <Route path="new" element={<NewChat />} />
           </Route>
         </Route>
       </Route>

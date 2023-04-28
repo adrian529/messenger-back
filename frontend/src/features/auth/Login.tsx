@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { setCredentials } from '../auth/authSlice';
 import { useLoginMutation } from '../auth/authApiSlice';
@@ -6,24 +6,30 @@ import { useGoogleLoginMutation } from '../auth/authApiSlice';
 import queryString from 'query-string';
 import { useLocation } from 'react-router-dom';
 import { useAppDispatch } from '../../app/hooks';
+import { useAppSelector } from '../../app/hooks';
+import { selectCurrentUser } from '../auth/authSlice';
 
 function Login() {
+
     const location = useLocation();
     const dispatch = useAppDispatch()
     let [googleLogin] = useGoogleLoginMutation()
+
+    const [timesRun, setTimesRun] = useState(0);
+    const counter = useRef(0);
+    const effectCalled = useRef(false);
+    let user = useAppSelector(state => selectCurrentUser(state))
+    console.log('user: ', user)
 
     const socialLogin = async () => {
         try {
             const { search } = location
             const codeFromGoogle = search.slice(6) // to get the value of the code query param.
-            try {
-                let userData = await googleLogin(codeFromGoogle) // unwrap lets you use try/catch block
-                console.log(userData)
-                dispatch(setCredentials(userData))
-                window.location.replace('/')
-            } catch (err) {
-                console.log(err)
-            }
+
+            let userData = await googleLogin(codeFromGoogle) // unwrap lets you use try/catch block
+    
+            window.location.replace('/')
+
         } catch (err) {
             console.error(err)
         }
@@ -33,7 +39,14 @@ function Login() {
     console.log(pathname)
     if (pathname === '/auth/google') {
         // this ensures that the social login method is run only when the path is /auth/google
-        socialLogin()
+        useEffect(() => {
+            if (effectCalled.current) return;
+            counter.current += 1;
+            setTimesRun(counter.current);
+            effectCalled.current = true;
+
+            socialLogin()
+        }, [])
     } else {
         // the app continues with its normal logic
 

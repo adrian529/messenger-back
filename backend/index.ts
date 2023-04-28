@@ -7,10 +7,12 @@ import bodyParser from 'body-parser';
 import cors from 'cors'
 import 'dotenv/config'
 import cookieParser from 'cookie-parser';
-import { verifyToken } from './middleware/verifyToken';
+
 const port = process.env.PORT;
 
 const app: Express = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 const corsConfig = {
     credentials: true,
@@ -41,9 +43,8 @@ dbConnect()
 
 app.use('/auth', authRoute)
 
-app.use('/users', usersRoute);
+app.use('/user', usersRoute);
 
-app.use(verifyToken)
 app.use('/chat', chatRoute)
 
 app.get('/', (req: Request, res: Response) => {

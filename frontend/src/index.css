@@ -59,21 +59,21 @@ h1 {
 }
 
 .chat-area {
-  overflow-y: scroll;
   display: flex;
-  width: 100%;
+  width: calc(100vw - 300px);
   flex-direction: column;
-}
-
-.chat {
-  background-color: papayawhip;
-  padding: 5px;
+  background-color: rgb(0, 94, 6);
   background-image: linear-gradient(to bottom, rgba(245, 246, 252, 0.52), rgba(117, 19, 93, 0.73));
   background-image: url(../src/xdd.webp);
   background-blend-mode: multiply;
   background-repeat: repeat;
   background-attachment: fixed;
+}
+
+.chat {
+  padding: 5px;
   flex-grow: 1;
+  overflow-y: scroll;
 }
 
 .contact-list {
@@ -106,7 +106,7 @@ h1 {
   flex-shrink: 0;
 }
 
-.xd {
+.contact-info {
   min-width: calc(100% - 64px);
   padding-left: 2%;
 }
@@ -179,9 +179,18 @@ h1 {
 
 .chat-header {
   position: sticky;
+  display: flex;
   top: 0px;
-  height: 50px;
-  background-color: black;
+  min-height: 70px;
+  align-items: center;
+  background-color: transparent;
+  border-bottom: 2px solid gray;
+}
+
+.chat-header_name {}
+
+.header-img {
+  margin: 0px 5px;
 }
 
 .message {

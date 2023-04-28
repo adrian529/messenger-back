@@ -1,16 +1,21 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import counterReducer from '../features/counter/counterSlice';
+import { combineReducers } from '@reduxjs/toolkit';
 import { useGetMessagesQuery } from './api/apiSlice';
 import { apiSlice } from './api/apiSlice';
+import { authSlice } from '../features/auth/authSlice';
 import { chatApi } from '../features/chat/chatApiSlice';
 import { setupListeners } from "@reduxjs/toolkit/dist/query";
 
+const rootReducer = combineReducers({
+    counter: counterReducer,
+    [apiSlice.reducerPath]: apiSlice.reducer,
+    [chatApi.reducerPath]: chatApi.reducer,
+    authSlice: authSlice.reducer
+})
+
 export const store = configureStore({
-    reducer: {
-        counter: counterReducer,
-        [apiSlice.reducerPath]: apiSlice.reducer,
-        [chatApi.reducerPath]: chatApi.reducer,
-    },
+    reducer: rootReducer,
     middleware: getDefaultMiddleware =>
         getDefaultMiddleware().concat(apiSlice.middleware, chatApi.middleware),
     devTools: true

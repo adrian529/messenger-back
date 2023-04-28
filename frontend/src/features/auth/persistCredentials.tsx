@@ -1,11 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { useEffect } from 'react'
-import { useSelector } from 'react-redux'
-import { selectCurrentUser } from "./authSlice";
-import { useAppDispatch } from '../../app/hooks';
-import { useGetUserMutation } from "../user/userApiSlice";
-import { setCredentials } from "./authSlice";
-import { useAppSelector } from "../../app/hooks";
+import { useGetUserInfoMutation } from "./authApiSlice";
 interface User {
     username: string;
     avatar: string;
@@ -15,27 +10,17 @@ interface User {
 }
 type T = Awaited<Promise<PromiseLike<object>>>
 const PersistCredentials = () => {
-/* 
-    const dispatch = useAppDispatch()
 
-    const [getUser] = useGetUserMutation({ id: String })
+    const [getUserInfo] = useGetUserInfoMutation()
 
+    let userInfo = async () => {
+        const hehe = await getUserInfo()
+    }
 
     useEffect(() => {
-        const getData = async () => {
-            await getUser('644071eaff92bd61194f48f8')
-                .then((res: any) => {
-                    if (!res.data) {
-                        throw new Error('err')
-                    }
-                    const userCredentials: User = res.data
-                    dispatch(setCredentials({ id: userCredentials._id, ...userCredentials }))
-
-
-                })
-        }
-        getData()
-    }, []) */
+        userInfo()
+    }, [])
+  
 
     let content
 

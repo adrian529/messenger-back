@@ -1,22 +1,24 @@
 import { Schema, model } from 'mongoose';
 import Message from './Message';
-
+import mongoose from 'mongoose';
 interface IMessage {
     userId: string;
     body: string;
     timestamp?: number;
 }
 // 1. Create an interface representing a document in MongoDB.
-interface IChat {
-    messages: IMessage[],
+interface IChat extends mongoose.Document {
+    messages: IMessage[]
     users: string[]
-    name?: string;
+    chatAdminId: string
+    name?: string
 }
 
 // 2. Create a Schema corresponding to the document interface.
 const chatSchema = new Schema<IChat>({
-    name: { type: String },
-    users: { type: [String] },
+    name: { type: String, required: true },
+    users: { type: [String], required: true },
+    chatAdminId: { type: String, required: true },
     messages: { type: [Message.schema] },
 });
 

@@ -6,7 +6,6 @@ const ChatArea = () => {
         <div className="chat-area">
             <ChatHeader />
             <Chat />
-            <ChatInput />
         </div>
     )
 }

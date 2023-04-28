@@ -13,8 +13,11 @@ export const chatApi = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000' }),
     tagTypes: ['Chat'],
     endpoints: (builder) => ({
-        getChat: builder.mutation<Array<String> | Object, String>({
-            query: (id) => `chat/${id}`,
+        getChat: builder.mutation<any, String>({
+            query: (id: String) => ({
+                url: `chat/${id}`
+            }),
+            providesTags: ['Chat'] as any,
         }),
         sendMessage: builder.mutation<Message, Message>({
             query: ({ id, userId, body }) => ({
@@ -23,8 +26,23 @@ export const chatApi = createApi({
                 credentials: 'include',
                 body: { userId, body },
             }),
+            invalidatesTags: ['Chat']
+        }),
+        createChat: builder.mutation({
+            query: ({ userIds, chatAdminId, chatName }) => ({
+                url: '/chat/new',
+                method: 'POST',
+                body: {
+                    userIds,
+                    chatAdminId,
+                    chatName
+                }
+            }),
+            invalidatesTags: [
+                { type: 'Chat', id: "LIST" }
+            ]
         }),
     }),
 })
 
-export const { useGetChatMutation, useSendMessageMutation } = chatApi
+export const { useGetChatMutation, useSendMessageMutation, useCreateChatMutation } = chatApi

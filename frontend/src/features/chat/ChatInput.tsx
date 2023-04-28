@@ -3,14 +3,20 @@ import { useState } from 'react'
 import TextareaAutosize from 'react-textarea-autosize';
 import Send from '@mui/icons-material/Send';
 import { useSendMessageMutation } from './chatApiSlice';
+import { selectCurrentUserId } from "../auth/authSlice"
+import { useParams } from 'react-router-dom';
+import { useAppSelector } from "../../app/hooks"
 
-const ChatInput = () => {
+
+const ChatInput = (props: any) => {
 
     interface Message {
-        id: String;
+        chatId: String;
         userId: String;
         body: String;
     }
+    const currentUserId = useAppSelector(state => selectCurrentUserId(state))
+    const chatId = props.chatId
 
     const [message, setMessage] = useState('')
     const [sendMessage] = useSendMessageMutation({ id: String, userId: String, body: String })
@@ -19,8 +25,8 @@ const ChatInput = () => {
         e.preventDefault()
         setMessage('')
         const newMessage: Message = {
-            id: '643b1ea6501c12d1db85dea9',
-            userId: 'xd',
+            id: chatId,
+            userId: currentUserId,
             body: message
         }
         sendMessage(newMessage)

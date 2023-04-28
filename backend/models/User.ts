@@ -8,8 +8,7 @@ interface IUser extends mongoose.Document {
     refreshToken: String;
     avatar?: String;
     email?: String;
-    serviceProvider?: String;
-
+    contactRequests?: String[];
 }
 // 2. Create a Schema corresponding to the document interface.
 const userSchema = new Schema<IUser>({
@@ -17,7 +16,8 @@ const userSchema = new Schema<IUser>({
     contacts: { type: [String] },
     refreshToken: { type: String, required: true },
     avatar: String,
-    email: String
+    email: String,
+    contactRequests: { type: [String] },
 });
 
 // 3. Create a Model.
