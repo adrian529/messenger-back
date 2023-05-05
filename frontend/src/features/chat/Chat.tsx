@@ -27,8 +27,8 @@ const Chat = () => {
 
     const [contactUrl, setContactUrl] = useState('')
 
-    let xd = useAppSelector(selectChatUrl)
-    let currentUrl = xd ? xd.split('/').pop() : chatId
+    let chatUrl = useAppSelector(selectChatUrl)
+    let currentUrl = chatUrl ? chatUrl.split('/').pop() : chatId
 
     useEffect(() => {
         console.log('current url: ', currentUrl)
@@ -40,7 +40,7 @@ const Chat = () => {
                 })
         }
         getData()
-    }, [newMessage, xd])
+    }, [newMessage, chatUrl])
 
     useEffect(() => {
         if (currentUrl) {

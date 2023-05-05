@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import { setChattUrl } from "../counter/counterSlice"
 import { useAppSelector } from "../../app/hooks"
-import { selectState } from "../counter/counterSlice"
 import { useAppDispatch } from "../../app/hooks"
 
 type ContactProps = {

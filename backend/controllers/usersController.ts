@@ -67,50 +67,67 @@ const getUser = async (req: TypedRequestBody<{ username: string }>, res: Express
 }
 
 const sendContactRequest = async (req: TypedRequestBody<{ username: string }>, res: Express.Response) => {
-    if (!req.body?.username || !req.cookies.user_id) return res.status(400)
 
-    const targetUsername = req.body.username
+    if (!req.params.id || !req.cookies.user_id) return res.status(400)
+    const targetId = req.params.id
     const userId = req.cookies.user_id
 
-    let foundUser = await User.findOne({ username: targetUsername }).lean()
-    if (!foundUser) return res.status(400).json({ message: "No user found" })
+    let foundUser
+    try {
+        foundUser = await User.findOne({ _id: targetId }).exec()
+    } catch {
+        return res.status(400).json({ message: "No user found" })
+    }
+    console.log(foundUser)
+    if (!foundUser) {
+        return res.status(400).json({ message: "No user found" })
+    }
 
     if (foundUser.contactRequests?.indexOf(userId) === -1) {
         foundUser.contactRequests.push(userId)
-        foundUser.save()
-        return res.status(201)
+        await foundUser.save()
+        return res.status(201).json({ message: "Request sent" })
     } else {
-        res.status(200)
+        res.status(200).json({ message: "Request has already been sent" })
     }
-
-    //array.indexOf(newItem) === -1 ? array.push(newItem) : console.log("This item already exists");
-
-
 }
 
-const answerContactRequest = async (req: TypedRequestBody<{ username: string, response: boolean }>, res: Express.Response) => {
-    if (!req.body.username || !req.body.response || !req.cookies.user_id) return res.status(400)
-    const username = req.body.username
-    const userId = req.cookies.user_id
+const answerContactRequest = async (req: TypedRequestBody<{ id: string, response: boolean }>, res: Express.Response) => {
+    console.log(req.body)
+
+    if (!req.body.id || (!req.body.response && req.body.response !== false) || !req.cookies.user_id) return res.status(400).json({ message: 'Error. Please try again later' })
+    const targetUserId = req.body.id
+    const respondingUserId = req.cookies.user_id
     const response = req.body.response
 
+    try {
+        const targetUser = await User.findOne({ _id: targetUserId })
+        const respondingUser = await User.findOne({ _id: respondingUserId })
 
-    const targetUser = await User.findById(userId).lean()
-    const foundUser = await User.findOne({ username: username }).lean()
 
+        if (!targetUser || !respondingUser || respondingUser.contactRequests?.indexOf(targetUserId) === -1) {
+            return res.status(400).json({ message: "Error. Please try again later" })
+        }
+        //if user accepts the contact request
 
-    if (!targetUser || !foundUser || targetUser.contactRequests.indexOf(username) === -1) {
-        return res.status(400)
+        if (response === true) {
+            targetUser.contacts.push(respondingUserId)
+            respondingUser.contacts.push(targetUserId)
+            respondingUser.contactRequests = respondingUser.contactRequests.filter(request => request !== targetUserId)
+            await respondingUser.save()
+            await targetUser.save()
+            return res.status(201).json({ message: "Request accepted" })
+        } else if (response === false) {
+            respondingUser.contactRequests = respondingUser.contactRequests?.filter(request => request !== targetUserId)
+            await respondingUser.save()
+            return res.status(201).json({ message: "Request denied" })
+        } else {
+            throw new Error
+        }
+    } catch (e: any) {
+        return res.status(400).json(e.message)
     }
-    //if user accepts the contact request
-    if (response === true) {
-        targetUser.contacts.push(foundUser.id)
-        foundUser.contacts.push(userId)
-        return res.status(201)
-    } else if (response === false) {
-        targetUser.contactRequests?.filter(request => request !== foundUser.id)
-        return res.status(201)
-    }
+
 }
 
 export {

@@ -1,7 +1,6 @@
 import { Schema, model } from 'mongoose';
 
 
-const xd = Date.now()
 // 1. Create an interface representing a document in MongoDB.
 interface IMessage {
     userId: string;

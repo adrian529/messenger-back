@@ -38,7 +38,7 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
         res.cookie('idToken', token, { sameSite: "none", secure: true, maxAge: 24 * 60 * 60 * 1000 })
         next()
     } catch (err: any) {
-        console.log('err xddd', err.stack)
+        console.log(err.stack)
         return res.status(400).json(err.message)
     }
 }

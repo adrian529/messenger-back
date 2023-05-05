@@ -3,15 +3,16 @@ import { RootState } from "../../app/store"
 /* username, contacts, avatar, email, id */
 export const authSlice = createSlice({
     name: 'auth',
-    initialState: { id: null, username: null, contacts: null, avatar: null, email: null },
+    initialState: { id: null, username: null, contacts: null, avatar: null, email: null, contactRequests: null },
     reducers: {
         setCredentials: (state, action) => {
-            const { id, username, contacts, avatar, email } = action.payload
+            const { id, username, contacts, avatar, email, contactRequests } = action.payload
             state.id = id
             state.username = username
             state.contacts = contacts
             state.avatar = avatar
             state.email = email
+            state.contactRequests = contactRequests
         },
         logOut: (state) => {
             state.id = null
@@ -19,6 +20,8 @@ export const authSlice = createSlice({
             state.contacts = null
             state.avatar = null
             state.email = null
+            state.contactRequests = null
+
         }
     }
 })

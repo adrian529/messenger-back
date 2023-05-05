@@ -23,7 +23,7 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
             next()
         })
         .catch(err => {
-            console.log('err xd', err.message)
+            console.log(err.message)
             refreshToken(req, res, next)
         });
 }

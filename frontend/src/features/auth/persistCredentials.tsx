@@ -13,14 +13,13 @@ const PersistCredentials = () => {
 
     const [getUserInfo] = useGetUserInfoMutation()
 
-    let userInfo = async () => {
-        const hehe = await getUserInfo()
-    }
 
     useEffect(() => {
-        userInfo()
+        (async () => {
+            const userData = await getUserInfo()
+        })()
     }, [])
-  
+
 
     let content
 

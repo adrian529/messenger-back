@@ -76,14 +76,22 @@ h1 {
   overflow-y: scroll;
 }
 
-.contact-list {
+.sidebar {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   max-height: 100%;
   background-color: #626262;
   width: min(300px, 100%);
-  overflow-y: scroll;
   flex-shrink: 0;
+}
+
+.contact-list {
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  height: 100%;
+
 }
 
 .contact {
@@ -140,6 +148,20 @@ h1 {
   padding-right: 5px;
 }
 
+.contact-add {
+  padding: 5px;
+  background-color: black;
+  height: 50px;
+
+}
+
+.contact-add_input {
+  border: none;
+  width: calc(100% - 10px);
+  padding: 10px;
+  height: 100%;
+}
+
 .chat-input {
   position: sticky;
   bottom: 0px;
@@ -147,6 +169,7 @@ h1 {
   align-items: center;
   background-color: black;
   padding: 5px;
+  min-height: 50px;
 }
 
 .chat-input form {
@@ -154,17 +177,22 @@ h1 {
 }
 
 .chat-input_textarea {
+  display: flex;
+  min-height: 100%;
+  justify-content: center;
+  font-family: inherit;
   font-size: 1rem;
   flex-grow: 1;
+  padding: 0.5em 1em;
   resize: none;
   border-radius: 20px;
   border: 0;
-  padding: 10px;
   margin-right: 10px;
   text-align: justify;
 }
 
-.chat-input_textarea:focus {
+.chat-input_textarea:focus,
+.contact-add_input:focus {
   outline: none
 }
 

@@ -24,7 +24,7 @@ const getChat = async (req: TypedRequestBody<{ body: string, userId: string, cha
         const chat = await Chat.findOne({ _id: chatId }, '-_id -__v').lean()
         return res.status(200).json(chat)
     } catch (err: any) {
-        console.log('lol xd error ', err.stack)
+        console.log(err.stack)
         return res.status(400).json({ message: "Chat not found." })
     }
 }

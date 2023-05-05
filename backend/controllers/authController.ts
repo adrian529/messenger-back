@@ -61,7 +61,7 @@ const authWithGoogle = async (req: Express.Request, res: Express.Response) => {
 
         let userEmail = userData.data.email
 
-        let foundUser = await User.findOne({ email: userEmail })
+        let foundUser = await User.findOne({ email: userEmail }, '-__v -refreshToken')
 
         if (!foundUser) {
 
@@ -82,10 +82,10 @@ const authWithGoogle = async (req: Express.Request, res: Express.Response) => {
         res.cookie('access_token', tokenFromGoogle, { sameSite: "none", secure: true, maxAge: 24 * 60 * 60 * 1000 }) //24 hours
         res.cookie('user_id', userId, { sameSite: "none", secure: true, maxAge: 30 * 24 * 60 * 60 * 1000 }) //1 month
         const { username, contacts, avatar, email, id } = foundUser
-        res.json({ username, contacts, avatar, email, id });
+        res.json(foundUser);
 
     } catch (err: any) {
-        console.log('jakis error xd ', err.message)
+        console.log(err.message)
         return res.json(err)
     }
 }
@@ -146,10 +146,10 @@ const getCredentials = async (req: Express.Request, res: Express.Response) => {
 
         let userEmail = userData.data.email
 
-        let foundUser: any = await User.findOne({ email: userEmail })
+        let foundUser: any = await User.findOne({ email: userEmail }, '-__v -refreshToken')
 
-        const { username, contacts, avatar, email, id } = foundUser
-        res.json({ username, contacts, avatar, email, id });
+        const { username, contacts, avatar, email, id, contactRequests } = foundUser
+        res.json({ username, contacts, avatar, email, id, contactRequests });
     } catch (error: any) {
         console.log(error.stack)
     }
