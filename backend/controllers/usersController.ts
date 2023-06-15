@@ -1,11 +1,24 @@
 import Express from 'express';
+import express from 'express';
 import User from '../models/User';
 import bcrypt from 'bcrypt'
 import { IUser } from '../../index'
+import axios from 'axios';
+import Chat from '../models/Chat';
+import Pusher = require('pusher');
+import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
+dotenv.config()
 
 interface TypedRequestBody<T> extends Express.Request {
     body: T
 }
+const pusher = new Pusher({
+    appId: process.env.PUSHER_APP_ID as string,
+    key: process.env.PUSHER_KEY as string,
+    secret: process.env.PUSHER_SECRET as string,
+    cluster: process.env.PUSHER_CLUSTER as string,
+    useTLS: true
+});
 
 const addUser = async (req: TypedRequestBody<{ username: string, password: string }>, res: Express.Response) => {
     if (!req.body?.username || !req.body?.password) return res.status(400).json({ message: "username or password missing" })
@@ -78,7 +91,6 @@ const sendContactRequest = async (req: TypedRequestBody<{ username: string }>, r
     } catch {
         return res.status(400).json({ message: "No user found" })
     }
-    console.log(foundUser)
     if (!foundUser) {
         return res.status(400).json({ message: "No user found" })
     }
@@ -99,7 +111,7 @@ const answerContactRequest = async (req: TypedRequestBody<{ id: string, response
     const targetUserId = req.body.id
     const respondingUserId = req.cookies.user_id
     const response = req.body.response
-
+const userIds = [targetUserId, respondingUserId]
     try {
         const targetUser = await User.findOne({ _id: targetUserId })
         const respondingUser = await User.findOne({ _id: respondingUserId })
@@ -111,16 +123,28 @@ const answerContactRequest = async (req: TypedRequestBody<{ id: string, response
         //if user accepts the contact request
 
         if (response === true) {
-            targetUser.contacts.push(respondingUserId)
-            respondingUser.contacts.push(targetUserId)
-            respondingUser.contactRequests = respondingUser.contactRequests.filter(request => request !== targetUserId)
-            await respondingUser.save()
-            await targetUser.save()
-            return res.status(201).json({ message: "Request accepted" })
+            try {
+                const newChat = await Chat.create({
+                    users: userIds,
+                });
+        
+                await User.updateMany({ "_id": { $in: userIds } }, { $push: { contacts: newChat.id } })
+        
+                userIds.map(userId => {
+                    pusher.sendToUser(userId, "new-channel", { message: "You joined a new channel" });
+                })
+                respondingUser.contactRequests = respondingUser.contactRequests.filter(request => request !== targetUserId)
+                await respondingUser.save()
+                await targetUser.save()    
+                res.status(201).json({ newChatId: newChat.id })
+            } catch(e) {
+                console.log(e)
+                res.status(400).json({ message: "An error occured. Please try again later." })
+            }
         } else if (response === false) {
             respondingUser.contactRequests = respondingUser.contactRequests?.filter(request => request !== targetUserId)
             await respondingUser.save()
-            return res.status(201).json({ message: "Request denied" })
+            return res.status(201).json({ message: false })
         } else {
             throw new Error
         }

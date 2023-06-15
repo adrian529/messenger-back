@@ -10,8 +10,8 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgb(255, 255, 255);
-  background-color: #8e8e8e;
+  color: #050505;
+  background-color: white;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -45,7 +45,6 @@ h1 {
 
 .app {
   display: flex;
-  height: 80vh;
   align-self: center;
   max-width: 100vw;
   overflow-y: scroll;
@@ -59,21 +58,46 @@ h1 {
 }
 
 .chat-area {
+  position: relative;
   display: flex;
   width: calc(100vw - 300px);
   flex-direction: column;
-  background-color: rgb(0, 94, 6);
-  background-image: linear-gradient(to bottom, rgba(245, 246, 252, 0.52), rgba(117, 19, 93, 0.73));
-  background-image: url(../src/xdd.webp);
-  background-blend-mode: multiply;
-  background-repeat: repeat;
-  background-attachment: fixed;
+  height: 100%;
+
+
 }
 
 .chat {
-  padding: 5px;
-  flex-grow: 1;
-  overflow-y: scroll;
+  position: relative;
+  overflow: auto;
+  display: flex;
+  margin: 0 auto;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+
+}
+
+.chat ul {
+  list-style-type: none;
+  width: 100%;
+  border-radius: 8px;
+  padding: 8px;
+  color: black;
+  position: relative;
+  overflow: auto;
+}
+
+
+.chat::after {
+  position: absolute;
+  content: '';
+  height: 100%;
+  width: 100%;
+  bottom: 0;
+  background: linear-gradient(rgb(255, 143, 178) 0%, rgb(167, 151, 255) 50%, rgb(0, 229, 255) 100%);
+  mix-blend-mode: screen;
+  pointer-events: none;
 }
 
 .sidebar {
@@ -81,17 +105,64 @@ h1 {
   flex-direction: column;
   justify-content: space-between;
   max-height: 100%;
-  background-color: #626262;
   width: min(300px, 100%);
   flex-shrink: 0;
+  background-color: #eeeeee;
+  border-right: 2px solid #aaa;
 }
 
 .contact-list {
   display: flex;
   flex-direction: column;
-  overflow-y: scroll;
+  overflow-y: auto;
   height: 100%;
 
+}
+
+.contact-requests p {
+  padding-top: 5px;
+  text-align: center;
+  font-weight: 500;
+  font-size: larger;
+}
+
+.contact-request {
+  display: flex;
+  padding: 5px 10px;
+  border-top: 2px solid #aaa;
+
+}
+
+.contact-request_text {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  text-align: center;
+  justify-content: space-evenly;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.contact-request_buttons {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.contact-request_btn {
+  flex-grow: 1;
+  margin: 0 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  color: white;
+}
+
+.contact-request_accept {
+  background-color: green;
+}
+
+.contact-request_decline {
+  background-color: rgb(175, 0, 0);
 }
 
 .contact {
@@ -99,11 +170,13 @@ h1 {
   align-items: center;
   padding: 2%;
   margin: 0px 5px;
-  border-radius: 10px;
+  border-radius: 15px;
 }
 
 .contact:hover {
-  background-color: #1a1a1a;
+  background-color: rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+
 }
 
 .contact-img {
@@ -132,13 +205,12 @@ h1 {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: rgb(183, 183, 183);
+  color: #050505;
   flex-shrink: 1;
 }
 
 .contact-name {
   font-weight: 500;
-  color: white;
   margin: 0;
 }
 
@@ -149,25 +221,50 @@ h1 {
 }
 
 .contact-add {
-  padding: 5px;
-  background-color: black;
-  height: 50px;
+  display: flex;
+  margin: 0 5px 5px 5px;
+}
 
+.contact-add_form {
+  height: 50px;
+  width: 100%;
+  padding-top: 10px;
+}
+
+.contact-add_form input {
+  width: 0px;
+  transition: width 0.2s, visibility 0.2s;
+  padding: 10px 0;
+  border-radius: 5px;
+}
+
+.contact-add_form input:focus-within {
+  padding: 10px;
+  width: 100%;
 }
 
 .contact-add_input {
   border: none;
-  width: calc(100% - 10px);
-  padding: 10px;
   height: 100%;
+  background-color: #aaa;
+  color: black;
 }
 
+.contact-add_btn {
+  background-color: transparent;
+  border: 0;
+  color: black;
+  margin: 10px 5px 0;
+  cursor: pointer;
+}
+.contact-add_btn:hover {
+  color:#337612;
+}
 .chat-input {
-  position: sticky;
-  bottom: 0px;
+  position: relative;
   display: flex;
   align-items: center;
-  background-color: black;
+  background-color: #eeeeee;
   padding: 5px;
   min-height: 50px;
 }
@@ -178,7 +275,7 @@ h1 {
 
 .chat-input_textarea {
   display: flex;
-  min-height: 100%;
+  max-height: 100%;
   justify-content: center;
   font-family: inherit;
   font-size: 1rem;
@@ -189,6 +286,8 @@ h1 {
   border: 0;
   margin-right: 10px;
   text-align: justify;
+  background-color: white;
+  color: black;
 }
 
 .chat-input_textarea:focus,
@@ -198,6 +297,7 @@ h1 {
 
 .chat-input_btn {
   background-color: transparent;
+  color: rgb(0, 229, 255);
   display: flex;
   justify-content: center;
   align-self: flex-end;
@@ -211,29 +311,33 @@ h1 {
   top: 0px;
   min-height: 70px;
   align-items: center;
-  background-color: transparent;
-  border-bottom: 2px solid gray;
-}
 
-.chat-header_name {}
+  box-shadow: 0px 0px 5px #aaa;
+  z-index: 1
+}
 
 .header-img {
   margin: 0px 5px;
 }
 
 .message {
-  background-color: #767676;
   padding: 5px 10px;
   margin: 2px;
   border-radius: 20px;
   width: fit-content;
   max-width: 60%;
   overflow-wrap: break-word;
+  color: black;
+  position: relative;
+  z-index: 1;
+  background: #eee;
 }
 
 .my-message {
-  background-color: #646cff;
   margin-left: auto;
+  z-index: 0;
+  background: black;
+  color: white;
 }
 
 @media (prefers-color-scheme: light) {

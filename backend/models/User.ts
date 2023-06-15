@@ -17,7 +17,7 @@ const userSchema = new Schema<IUser>({
     refreshToken: { type: String, required: true },
     avatar: String,
     email: String,
-    contactRequests: { type: [String], required: true },
+    contactRequests: { type: [String] },
 });
 
 // 3. Create a Model.

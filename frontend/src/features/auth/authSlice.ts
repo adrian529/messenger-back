@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit"
 import { RootState } from "../../app/store"
+
 /* username, contacts, avatar, email, id */
 export const authSlice = createSlice({
     name: 'auth',
@@ -22,13 +23,23 @@ export const authSlice = createSlice({
             state.email = null
             state.contactRequests = null
 
-        }
+        },
+        addNewContact: (state: RootState, action) => {
+            const { id } = action.payload
+            state.contactRequests = state.contactRequests.filter(req => req !== id)
+            state.contacts.push(id)
+        },
+        rejectContact: (state, action) => {
+            const { id } = action.payload
+            state.contactRequests = state.contactRequests.filter(req !== id)
+        },
     }
 })
 
-export const { setCredentials, logOut } = authSlice.actions
+export const { setCredentials, logOut, addNewContact, rejectContact } = authSlice.actions
 
 export default authSlice.reducer
 
 export const selectCurrentUser = (state: RootState) => state.authSlice
 export const selectCurrentUserId = (state: RootState) => state.authSlice.id
+export const selectCurrentUserRequests = (state: RootState) => state.authSlice.contactRequests

@@ -1,12 +1,3 @@
-/*
-for testing 
-{
-    "userIds": ["643b1db386a2e9654bfa3d77","643b1d930e5059fc7a067b86","644071eaff92bd61194f48f8"],
-    "chatAdminId": "644071eaff92bd61194f48f8",
-    "chatName": "name"
-}
-*/
-
 import React from 'react'
 import { useCreateChatMutation } from './chatApiSlice'
 import { useState } from 'react'
@@ -25,7 +16,7 @@ const NewChat = () => {
     const onChatNameChanged = (e: React.ChangeEvent<HTMLInputElement>) => setChatName(e.target.value)
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        await createChat({ userIds: ["643b1db386a2e9654bfa3d77", "643b1d930e5059fc7a067b86", "644071eaff92bd61194f48f8"], chatAdminId: currentUserId, chatName })
+        await createChat({ userIds: ["1", "3", "2"], chatAdminId: currentUserId, chatName })
             .then(res => console.log(res))
     }
 

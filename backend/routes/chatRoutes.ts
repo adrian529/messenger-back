@@ -9,5 +9,5 @@ chatRoute.route('/new')
     .post(newChat)
 
 chatRoute.route('/:chatId')
-    .get(getChat)
+    .get(verifyToken, getChat)
     .post(verifyToken, newMessage)

@@ -5,7 +5,8 @@ import { useEffect } from "react"
 import { useState } from "react"
 import Done from '@mui/icons-material/Done';
 import Close from '@mui/icons-material/Close';
-
+import { useAppSelector } from "../../app/hooks"
+import { addContact } from "../auth/authSlice"
 type ContactProps = {
     contact: string;
 }
@@ -20,6 +21,9 @@ interface IUser {
 }
 
 const ContactRequest = (props: ContactProps) => {
+
+    const dispatch = useAppDispatch()
+
     const [user, setUser] = useState<IUser>({})
 
     const [getUser] = useGetUserMutation()
@@ -41,21 +45,24 @@ const ContactRequest = (props: ContactProps) => {
         contactReponse({ id, response })
             .then(res => console.log('res', res))
     }
-    if (user) {
-        return (
-            <div>
-                <img src={user.avatar} className="contact-img" />
+    return (
+        <div className="contact-request">
+            <img src={user.avatar} className="contact-img"
+                onError={({ currentTarget }) => {
+                    currentTarget.onerror = null; // prevents looping
+                    currentTarget.src = "https://i.ytimg.com/vi/VqWmSoWvQqo/mqdefault.jpg";
+                }}
+            />
+
+            <div className="contact-request_text">
                 {user.username}
-                <Done onClick={(e) => handleResponse(e, true)} />
-                <Close onClick={(e) => handleResponse(e, false)} />
+                <span className="contact-request_buttons">
+                    <Close role="button" className="contact-request_btn contact-request_decline" onClick={(e) => handleResponse(e, false)} />
+                    <Done role="button" className="contact-request_btn contact-request_accept" onClick={(e) => handleResponse(e, true)} />
+                </span>
             </div>
-        )
-    } else {
-        return <div>
-
         </div>
-    }
-
+    )
 }
 
 export default ContactRequest

@@ -5,7 +5,6 @@ import { Routes, Route } from 'react-router-dom'
 import Layout from "./assets/Layout";
 import Login from "./features/auth/Login";
 import PersistCredentials from "./features/auth/persistCredentials";
-import NewChat from "./features/chat/newChat";
 
 function App() {
   
@@ -22,7 +21,6 @@ function App() {
             <Route path=":chatId">
               <Route index element={<ChatArea />} />
             </Route>
-            <Route path="new" element={<NewChat />} />
           </Route>
         </Route>
       </Route>

@@ -38,8 +38,10 @@ function Login() {
     const { pathname } = location;
     console.log(pathname)
     if (pathname === '/auth/google') {
+
         // this ensures that the social login method is run only when the path is /auth/google
         useEffect(() => {
+            //wyjebac to w produkcji
             if (effectCalled.current) return;
             counter.current += 1;
             setTimesRun(counter.current);
@@ -47,6 +49,11 @@ function Login() {
 
             socialLogin()
         }, [])
+        return (
+        <>
+        </>
+        )
+
     } else {
         // the app continues with its normal logic
 

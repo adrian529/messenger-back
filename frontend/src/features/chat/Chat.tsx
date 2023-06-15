@@ -8,11 +8,50 @@ import { pusherClient } from "../../app/pusherClient";
 import { selectChatUrl } from "../counter/counterSlice";
 import ChatInput from "./ChatInput";
 
+/* 
+import useFeed from "../../hooks/useFeed"
+
+const Feed = () => {
+    const email = useSelector(selectCurrentUser)
+
+    const [page, setPage] = useState(Number(sessionStorage.getItem("feedPage")) || 0)
+    const {
+        postsIsLoading,
+        postsIsError,
+        postsError,
+        postsResults,
+        postsHasNextPage,
+    } = useFeed(email, page)
+
+    const intObserver = useRef()
+
+    const lastPostRef = useCallback(post => {
+        if (postsIsLoading) return
+        if (intObserver.current) intObserver.current.disconnect()
+        intObserver.current = new IntersectionObserver(posts => {
+            if (posts[0].isIntersecting && postsHasNextPage) {
+                setPage(prev => prev + 1)
+                const pageNum = page + 1
+                sessionStorage.setItem("feedPage", pageNum);
+            }
+        })
+        if (post) intObserver.current.observe(post)
+    }, [postsIsLoading, postsHasNextPage])
+
+*/
+
 const Chat = () => {
     interface Message {
         userId: string;
         body: string;
         timestamp: string;
+    }
+    const scrollToBottom = (id: string) => {
+        const element = document.getElementById(id);
+        if (!element) {
+            return
+        }
+        element.scrollIntoView({ behavior: "smooth" });
     }
     const pusher = pusherClient
 
@@ -30,47 +69,75 @@ const Chat = () => {
     let chatUrl = useAppSelector(selectChatUrl)
     let currentUrl = chatUrl ? chatUrl.split('/').pop() : chatId
 
+    const getData = async () => {
+        await getChat(currentUrl as string)
+            .then(res => setMessages(res.data.messages)
+            ).catch((e) => {
+                console.log(e)
+            })
+    }
+
     useEffect(() => {
-        console.log('current url: ', currentUrl)
-        const getData = async () => {
-            await getChat(currentUrl as string)
-                .then(res => setMessages(res.data.messages)
-                ).catch((e) => {
-                    console.log(e)
-                })
-        }
-        getData()
-    }, [newMessage, chatUrl])
+        scrollToBottom("bottom")
+    }, [chatUrl])
 
     useEffect(() => {
         if (currentUrl) {
             pusher.signin()
-
             let channel = pusher.subscribe(currentUrl) // channel = chat ID
-
             channel.bind('new-message', async (data: any) => {
                 //callback
-                setNewMessage(data)
+                setMessages((prev => [...prev, data.newMessage]))
+                scrollToBottom("bottom")
+                console.log(messages)
             })
             pusher.bind('new-channel', async (data: any) => {
                 //callback
                 console.log(data)
             })
         }
-    }, [currentUrl])
+        getData()
+        scrollToBottom("bottom")
+    }, [chatUrl])
 
     return (
         <>
-            <div className="chat">
-                {
-                    messages.map((message: Message, index) => (
-                        <Message userId={message.userId} timestamp={message.timestamp} body={message.body} key={index} />
-                    ))
-                }
+            <div className="chat" id="chat">
+                <ul id="chuj">
+                    <li id='top'></li>
+                    {/*  {
+                    messages.map((message: Message, index) =>{
+                        if(messages.length-1 === index){
+                        return (
+                            <Message userId={message.userId} timestamp={message.timestamp} body={message.body} key={index} id="xd"/>
+                        )
+                    } else  return (
+                        <Message userId={message.userId} timestamp={message.timestamp} body={message.body} key={index} id={`${index}`}/>
+                    )
+                        
+                    })
+                } */}
+                    {messages.map((message: Message, index) => {
+                        return (
+                            <Message userId={message.userId} timestamp={message.timestamp} body={message.body} key={index} id={`${index}`} />
+                        )
+                    })
+                    }
+                    <li id='bottom'></li>
+                </ul>
             </div>
             <ChatInput chatId={currentUrl} />
         </>
     )
+
+    /* 
+      return (
+        <div className="feed">
+            {content}
+            {postsIsLoading && <p>Loading...</p>}
+        </div>
+    )
+    */
 }
 
 export default Chat

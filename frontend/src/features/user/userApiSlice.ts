@@ -1,5 +1,7 @@
 import { apiSlice } from "../../app/api/apiSlice";
-
+import { setCredentials } from "../auth/authSlice";
+import ContactRequest from "../contacts/ContactRequest";
+import { addNewContact } from "../auth/authSlice";
 export const userApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
 
@@ -7,16 +9,17 @@ export const userApiSlice = apiSlice.injectEndpoints({
             query: (id: string) => ({
                 url: `/user/${id}`,
                 method: 'GET',
-                credentials: 'include'
+                credentials: 'include',
             }),
-            providesTags: ['User'] as any,
         }),
+        
         addContact: builder.mutation({
             query: (id: string) => ({
                 url: `/user/${id}`,
                 method: 'POST',
                 credentials: 'include'
-            })
+            }),
+            invalidatesTags: ['User'],
         }),
         contactRequestResponse: builder.mutation({
             query: ({ id, response }) => ({
@@ -26,10 +29,8 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 },
                 method: 'POST',
                 credentials: 'include',
-                invalidatesTags: ['User']
             }),
-            invalidatesTags: ['User']
-
+            invalidatesTags: ['User'],
         }),
     })
 })

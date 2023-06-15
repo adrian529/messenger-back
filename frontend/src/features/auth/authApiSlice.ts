@@ -43,28 +43,30 @@ export const authApiSlice = apiSlice.injectEndpoints({
                 withCredentials: true,
             }),
         }),
-        getUserInfo: builder.mutation({
+        getUserInfo: builder.query({
             query: () => ({
                 url: '/auth/userinfo',
                 method: 'GET',
                 credentials: 'include',
                 withCredentials: true,
             }),
+            providesTags: ['User'],
             async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+                console.log('dupa')
                 try {
                     const { data } = await queryFulfilled
                     dispatch(setCredentials(data))
                 } catch (err) {
                     console.log(err)
                 }
-            }
+            },
         })
-    })
+    }),
 })
 
 export const {
     useLoginMutation,
     useSendLogoutMutation,
     useGoogleLoginMutation,
-    useGetUserInfoMutation,
+    useGetUserInfoQuery,
 } = authApiSlice

@@ -10,15 +10,11 @@ interface IMessage {
 interface IChat extends mongoose.Document {
     messages: IMessage[]
     users: string[]
-    chatAdminId: string
-    name?: string
 }
 
 // 2. Create a Schema corresponding to the document interface.
 const chatSchema = new Schema<IChat>({
-    name: { type: String, required: true },
     users: { type: [String], required: true },
-    chatAdminId: { type: String, required: true },
     messages: { type: [Message.schema] },
 });
 

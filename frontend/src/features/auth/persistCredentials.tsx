@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { useEffect } from 'react'
-import { useGetUserInfoMutation } from "./authApiSlice";
+import { useGetUserInfoQuery } from "./authApiSlice";
 interface User {
     username: string;
     avatar: string;
@@ -11,12 +11,9 @@ interface User {
 type T = Awaited<Promise<PromiseLike<object>>>
 const PersistCredentials = () => {
 
-    const [getUserInfo] = useGetUserInfoMutation()
-
-
     useEffect(() => {
         (async () => {
-            const userData = await getUserInfo()
+            const userData = await useGetUserInfoQuery()
         })()
     }, [])
 

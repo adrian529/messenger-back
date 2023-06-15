@@ -15,8 +15,10 @@ export const chatApi = createApi({
     endpoints: (builder) => ({
         getChat: builder.mutation<any, String>({
             query: (id: String) => ({
-                url: `chat/${id}`
+                url: `chat/${id}`,
+                credentials: 'include'
             }),
+            
             providesTags: ['Chat'] as any,
         }),
         sendMessage: builder.mutation<Message, Message>({

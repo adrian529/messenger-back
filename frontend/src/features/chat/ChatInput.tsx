@@ -11,7 +11,7 @@ import { useAppSelector } from "../../app/hooks"
 const ChatInput = (props: any) => {
 
     interface Message {
-        chatId: String;
+        id: String;
         userId: String;
         body: String;
     }
@@ -33,13 +33,19 @@ const ChatInput = (props: any) => {
             .then(res => console.log(res))
     }
 
-    return (
-        <form className='chat-input' onSubmit={handleSendMessage}>
-            <TextareaAutosize className="chat-input_textarea" maxRows={9} value={message} onChange={(e) => setMessage(e.target.value)}>
-            </TextareaAutosize>
-            <button className='chat-input_btn' type="submit"><Send /></button>
-        </form>
-    )
-}
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') { 
+            handleSendMessage(e)
+        }
+    }
 
-export default ChatInput
+        return (
+            <form className='chat-input' onSubmit={handleSendMessage}>
+                <TextareaAutosize className="chat-input_textarea" maxRows={9} value={message} onKeyDown={handleKeyPress}
+                    onChange={(e) => setMessage(e.target.value)} />
+                <button className='chat-input_btn' type="submit"><Send /></button>
+            </form>
+        )
+    }
+
+    export default ChatInput
