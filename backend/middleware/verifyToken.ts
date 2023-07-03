@@ -3,7 +3,6 @@ import { Express, Request, Response, NextFunction } from 'express';
 import { refreshToken } from './refreshToken';
 
 export const verifyToken = (req: Request, res: Response, next: NextFunction) => {
-
     if (!req.cookies.idToken) {
 
         throw new Error('no token provided');

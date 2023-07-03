@@ -5,7 +5,7 @@ import { addNewContact } from "../auth/authSlice";
 export const userApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
 
-        getUser: builder.mutation({
+        getUser: builder.query({
             query: (id: string) => ({
                 url: `/user/${id}`,
                 method: 'GET',
@@ -36,7 +36,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
 })
 
 export const {
-    useGetUserMutation,
+    useGetUserQuery,
     useAddContactMutation,
     useContactRequestResponseMutation
 } = userApiSlice

@@ -21,16 +21,48 @@ const getChat = async (req: TypedRequestBody<{ body: string, userId: string, cha
     }
 
     try {
-        const chat = await Chat.findOne({ _id: chatId }, '-_id -__v').lean()
-        return res.status(200).json(chat)
+        const userId = req.cookies.user_id;
+        if (req.params.lastmsg === 'last-msg') {
+            const chat = await Chat.findOne({ _id: chatId }, { 'messages': { $slice: -1 }, '__v': 0, '_id': 0, 'users:': 0 }).lean()
+            const lastMessage = chat?.messages[0]
+            const targetUserId = chat?.users.find(id => id !== userId)
+            const user = await User.findOne({ _id: targetUserId }).select('username avatar').lean()
+            return res.status(200).json({ lastMessage, user })
+        } else {
+            const chat = await Chat.findOne({ _id: chatId }, '-_id -__v').lean()
+            const targetUserId = chat?.users.find(id => id !== userId)
+            const user = await User.findOne({ _id: targetUserId }).select('username avatar').lean()
+            return res.status(200).json({ chat, user })
+        }
     } catch (err: any) {
         console.log(err.stack)
         return res.status(400).json({ message: "Chat not found." })
     }
 }
 
+const getContacts = async (req: TypedRequestBody<{ body: string, userId: string }>, res: Express.Response) => {
+    const userId = req.cookies.user_id;
+    const user = await User.findOne({ _id: userId }).select('contacts').lean()
+    const chatIds = user?.contacts
+
+    const contactsList = []
+    try {
+        const chats = await Chat.find({ _id: { $in: chatIds } }, { 'messages': { $slice: -1 }, '__v': 0, 'users:': 0 }).lean()
+        for (const chat of chats) {
+            try {
+                const targetUserId = chat?.users.find(id => id !== userId)
+                const targetUser = await User.findOne({ _id: targetUserId }).select('username avatar').lean()
+                contactsList.push({ targetUser, lastMessage: chat.messages[0], chatId: chat._id })
+            } catch { }
+        }
+        return res.status(200).json({ contactsList })
+    } catch (err) {
+        return res.status(400).json({ message: "Chat not found." })
+    }
+
+}
 const getFeed = async (req: TypedRequestBody<{ messageId: string, chatId: string }>, res: Express.Response) => {
-    const { chatId, messageId} = req.params
+    const { chatId, messageId } = req.params
     if (!chatId || !messageId) {
         return res.status(400).json({ message: "Error. Please try again later." })
     }
@@ -67,5 +99,6 @@ const newChat = async (req: TypedRequestBody<{ userIds: string[], chatAdminId: s
 
 export {
     getChat,
-    newChat
+    newChat,
+    getContacts
 }

@@ -1,7 +1,6 @@
-import { authWithGoogle, pusherAuth, getCredentials } from '../controllers/authController'
+import { authWithGoogle, pusherAuth, getCredentials, handleLogout } from '../controllers/authController'
 import express from 'express';
 import { verifyToken } from "../middleware/verifyToken";
-
 
 export const authRoute = express.Router();
 
@@ -12,3 +11,5 @@ authRoute.route('/pusher')
     .get(pusherAuth)
 authRoute.route('/userinfo')
     .get(verifyToken, getCredentials)
+authRoute.route('/logout')
+    .get(verifyToken, handleLogout)

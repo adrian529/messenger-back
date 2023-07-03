@@ -1,5 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-
+import {
+    createSelector,
+    createEntityAdapter
+} from "@reduxjs/toolkit";
 
 interface Message {
     id: String;
@@ -7,20 +10,43 @@ interface Message {
     body: String;
 }
 
-// Define a service using a base URL and expected endpoints
 export const chatApi = createApi({
     reducerPath: 'chatApi',
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000' }),
     tagTypes: ['Chat'],
+
     endpoints: (builder) => ({
         getChat: builder.mutation<any, String>({
             query: (id: String) => ({
                 url: `chat/${id}`,
                 credentials: 'include'
             }),
-            
+
             providesTags: ['Chat'] as any,
         }),
+        getContacts: builder.query<any, String>({
+            query: () => ({
+                url: `chat/contacts`,
+                credentials: 'include'
+            }),
+            providesTags: ['Chat'] as any,
+            transformResponse: responseData => {
+                responseData = responseData.contactsList
+                const loadedContacts = responseData.map(contact => {
+                    contact.id = contact.chatId
+                    return contact
+                });
+                let sortedResponse = loadedContacts.sort((a,b) => b.lastMessage.timestamp - a.lastMessage.timestamp)
+                return sortedResponse
+            }
+        }),
+        /*         getChatBrief: builder.query<any, String>({
+                    query: (id: String) => ({
+                        url: `chat/${id}/last-msg`,
+                        credentials: 'include'
+                    }),
+                    providesTags: ['Chat'] as any,
+                }), */
         sendMessage: builder.mutation<Message, Message>({
             query: ({ id, userId, body }) => ({
                 url: `chat/${id}`,
@@ -47,4 +73,4 @@ export const chatApi = createApi({
     }),
 })
 
-export const { useGetChatMutation, useSendMessageMutation, useCreateChatMutation } = chatApi
+export const { useGetChatMutation, useSendMessageMutation, useCreateChatMutation, useGetContactsQuery } = chatApi

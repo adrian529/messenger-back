@@ -1,44 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Message from "./Message";
 import { useGetChatMutation } from "./chatApiSlice";
 import { selectCurrentUser } from "../auth/authSlice";
 import { useAppSelector } from "../../app/hooks";
 import { useParams } from "react-router-dom";
 import { pusherClient } from "../../app/pusherClient";
-import { selectChatUrl } from "../counter/counterSlice";
+import { selectChatUrl } from "../auth/authSlice";
 import ChatInput from "./ChatInput";
-
-/* 
-import useFeed from "../../hooks/useFeed"
-
-const Feed = () => {
-    const email = useSelector(selectCurrentUser)
-
-    const [page, setPage] = useState(Number(sessionStorage.getItem("feedPage")) || 0)
-    const {
-        postsIsLoading,
-        postsIsError,
-        postsError,
-        postsResults,
-        postsHasNextPage,
-    } = useFeed(email, page)
-
-    const intObserver = useRef()
-
-    const lastPostRef = useCallback(post => {
-        if (postsIsLoading) return
-        if (intObserver.current) intObserver.current.disconnect()
-        intObserver.current = new IntersectionObserver(posts => {
-            if (posts[0].isIntersecting && postsHasNextPage) {
-                setPage(prev => prev + 1)
-                const pageNum = page + 1
-                sessionStorage.setItem("feedPage", pageNum);
-            }
-        })
-        if (post) intObserver.current.observe(post)
-    }, [postsIsLoading, postsHasNextPage])
-
-*/
+import { useLocation } from "react-router-dom";
+import ChatHeader from "./ChatHeader"
+import { useAppDispatch } from "../../app/hooks";
+import { setChattUrl } from "../auth/authSlice";
+import { Loading } from "../../assets/Loading";
+import { useGetContactsQuery } from "../chat/chatApiSlice"
 
 const Chat = () => {
     interface Message {
@@ -46,50 +20,67 @@ const Chat = () => {
         body: string;
         timestamp: string;
     }
-    const scrollToBottom = (id: string) => {
-        const element = document.getElementById(id);
+    const chatRef = useRef<HTMLDivElement>(null);
+
+    const scrollToBottom = (behavior) => {
+        const element = document.getElementById('chuj');
         if (!element) {
             return
         }
-        element.scrollIntoView({ behavior: "smooth" });
+
+        let chatHeight = element.scrollHeight
+
+        element.scrollTo({
+            top: chatHeight,
+            behavior,
+        });
     }
+    const dispatch = useAppDispatch()
     const pusher = pusherClient
-
     const { chatId } = useParams()
-
-    const [newMessage, setNewMessage] = useState('')
     const [messages, setMessages] = useState([])
+    const [contact, setContact] = useState({})
     const [getChat, {
         isLoading,
         error
     }] = useGetChatMutation({ id: String })
 
-    const [contactUrl, setContactUrl] = useState('')
-
     let chatUrl = useAppSelector(selectChatUrl)
+    if(!chatUrl){
+        dispatch(setChattUrl())
+    }
     let currentUrl = chatUrl ? chatUrl.split('/').pop() : chatId
+
+    
+    const {
+        refetch 
+    } = useGetContactsQuery()
 
     const getData = async () => {
         await getChat(currentUrl as string)
-            .then(res => setMessages(res.data.messages)
+            .then(res => {
+                setMessages(res.data.chat.messages)
+                setContact(res.data.user)
+            }
             ).catch((e) => {
                 console.log(e)
             })
     }
 
     useEffect(() => {
-        scrollToBottom("bottom")
-    }, [chatUrl])
+        scrollToBottom('smooth')
+    }, [messages])
 
     useEffect(() => {
+        setMessages([])
         if (currentUrl) {
             pusher.signin()
             let channel = pusher.subscribe(currentUrl) // channel = chat ID
+            channel.unbind()
             channel.bind('new-message', async (data: any) => {
                 //callback
-                setMessages((prev => [...prev, data.newMessage]))
-                scrollToBottom("bottom")
-                console.log(messages)
+                refetch()
+                setMessages((prev) => [...prev, data.newMessage])
             })
             pusher.bind('new-channel', async (data: any) => {
                 //callback
@@ -97,47 +88,33 @@ const Chat = () => {
             })
         }
         getData()
-        scrollToBottom("bottom")
+        scrollToBottom('instant')
     }, [chatUrl])
 
-    return (
-        <>
-            <div className="chat" id="chat">
-                <ul id="chuj">
-                    <li id='top'></li>
-                    {/*  {
-                    messages.map((message: Message, index) =>{
-                        if(messages.length-1 === index){
-                        return (
-                            <Message userId={message.userId} timestamp={message.timestamp} body={message.body} key={index} id="xd"/>
-                        )
-                    } else  return (
-                        <Message userId={message.userId} timestamp={message.timestamp} body={message.body} key={index} id={`${index}`}/>
-                    )
-                        
-                    })
-                } */}
-                    {messages.map((message: Message, index) => {
-                        return (
-                            <Message userId={message.userId} timestamp={message.timestamp} body={message.body} key={index} id={`${index}`} />
-                        )
-                    })
-                    }
-                    <li id='bottom'></li>
-                </ul>
+    if (currentUrl === '' || null || undefined) {
+        return null
+    } else if(isLoading) {
+        return <Loading />
+    } else {
+        return (
+            <div className="chat-area">
+                <ChatHeader username={contact.username} avatar={contact.avatar}/>
+                <div className="chat" id="chat" ref={chatRef}>
+                    <ul id="chuj">
+                        <li id='top'></li>
+                        {messages.map((message: Message, index) => {
+                            return (
+                                <Message userId={message.userId} timestamp={message.timestamp} body={message.body} key={index} id={`${index}`} />
+                            )
+                        })
+                        }
+                        <li id='bottom'></li>
+                    </ul>
+                </div>
+                <ChatInput chatId={currentUrl} />
             </div>
-            <ChatInput chatId={currentUrl} />
-        </>
-    )
-
-    /* 
-      return (
-        <div className="feed">
-            {content}
-            {postsIsLoading && <p>Loading...</p>}
-        </div>
-    )
-    */
+        )
+    }
 }
 
 export default Chat

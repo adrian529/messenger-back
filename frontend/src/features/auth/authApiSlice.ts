@@ -22,7 +22,9 @@ export const authApiSlice = apiSlice.injectEndpoints({
         sendLogout: builder.mutation({
             query: () => ({
                 url: '/auth/logout',
-                method: 'POST',
+                method: 'GET',
+                credentials: 'include',
+                withCredentials: true,
             }),
             async onQueryStarted(arg, { dispatch, queryFulfilled }) {
                 try {
@@ -52,7 +54,6 @@ export const authApiSlice = apiSlice.injectEndpoints({
             }),
             providesTags: ['User'],
             async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-                console.log('dupa')
                 try {
                     const { data } = await queryFulfilled
                     dispatch(setCredentials(data))

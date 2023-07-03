@@ -1,11 +1,13 @@
+@import url('https://fonts.cdnfonts.com/css/bricolage-grotesque');
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+
 }
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -36,6 +38,7 @@ body {
   place-items: center;
   min-width: 100vw;
   min-height: 100vh;
+  font-family: 'Bricolage Grotesque', sans-serif;
 }
 
 h1 {
@@ -103,7 +106,6 @@ h1 {
 .sidebar {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   max-height: 100%;
   width: min(300px, 100%);
   flex-shrink: 0;
@@ -115,8 +117,14 @@ h1 {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  height: 100%;
+  padding-top: 1rem;
+  margin-bottom: auto;
+}
 
+.contact-requests {
+  max-height: 25%;
+  overflow-y: auto;
+  margin-top: auto;
 }
 
 .contact-requests p {
@@ -168,20 +176,22 @@ h1 {
 .contact {
   display: flex;
   align-items: center;
-  padding: 2%;
-  margin: 0px 5px;
-  border-radius: 15px;
+  padding: 5px 10px;
+  background-color: rgb(238, 238, 238);
+}
+
+.contact-active {
+  background-color: rgb(201, 201, 201);
 }
 
 .contact:hover {
-  background-color: rgba(0, 0, 0, 0.08);
+  background-color: #aaa;
   cursor: pointer;
-
 }
 
 .contact-img {
   width: 64px;
-  height: 64px;
+  aspect-ratio: 1;
   object-fit: cover;
   border-radius: 100%;
   flex-shrink: 0;
@@ -189,7 +199,7 @@ h1 {
 
 .contact-info {
   min-width: calc(100% - 64px);
-  padding-left: 2%;
+  padding-left: 8px;
 }
 
 .contact-lastmsg {
@@ -200,7 +210,6 @@ h1 {
 
 .contact-lastmsg p,
 .contact-name {
-  margin: 0 5px 0 0;
   align-items: center;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -218,6 +227,8 @@ h1 {
 .contact-lastmsg_timestamp {
   margin-left: auto;
   padding-right: 5px;
+  text-align: right;
+  flex-shrink: 0;
 }
 
 .contact-add {
@@ -257,9 +268,11 @@ h1 {
   margin: 10px 5px 0;
   cursor: pointer;
 }
+
 .contact-add_btn:hover {
-  color:#337612;
+  color: #337612;
 }
+
 .chat-input {
   position: relative;
   display: flex;
@@ -338,6 +351,102 @@ h1 {
   z-index: 0;
   background: black;
   color: white;
+}
+
+.current-user-card {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px;
+  border-bottom: 2px solid #aaa;
+}
+
+.current-user-left {
+  display: flex;
+}
+
+.current-user-left .contact-name {
+  align-self: center;
+  margin-left: 8px;
+}
+
+.open-menu-button {
+  background: none;
+  border: none;
+  color: black;
+  cursor: pointer;
+}
+
+.open-menu-button .menu-active {
+  transform: rotate(180deg);
+  transition: all 0.2s;
+}
+
+.open-menu-button .menu-notActive {
+  transition: all 0.2s;
+}
+
+.menu-active {
+  height: 60px;
+  transition: height 0.2s;
+}
+
+.menu {
+  margin: 1rem 0;
+  list-style-type: none;
+}
+
+.menu li {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.menu-notActive {
+  height: 0;
+  transition: height 0.2s;
+}
+
+.menu-button {
+  width: 100%;
+  padding: 0.5rem 2rem;
+  background-color: transparent;
+  border: 2px solid #aaa;
+  outline: none;
+  border-radius: 1rem;
+  color: black;
+  cursor: pointer;
+}
+
+.mobile {
+  visibility: hidden;
+  width: 0;
+}
+
+
+@media screen and (width < 767px) {
+
+  .mobile {
+    visibility: visible;
+    width: fit-content
+  }
+
+  .sidebar {
+    visibility: hidden;
+    width: 0%;
+  }
+
+  .sidebar-active {
+    visibility: visible;
+    width: 100%;
+  }
+
+  .chat-area {
+    width: 100%;
+  }
+
+  .message {
+    max-width: 85%;
+  }
 }
 
 @media (prefers-color-scheme: light) {

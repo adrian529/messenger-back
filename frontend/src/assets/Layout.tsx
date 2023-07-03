@@ -1,18 +1,13 @@
 import { Outlet } from "react-router-dom";
 import ContactList from "../features/contacts/ContactList";
-import { useLocation } from "react-router-dom";
-const Layout = () => {
-    const location = useLocation();
-    console.log(location)
 
+const Layout = () => {
 
     return (
-
         <div className="layout">
             <ContactList />
             <Outlet />
         </div >
-
     )
 }
 

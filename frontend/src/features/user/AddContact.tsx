@@ -24,9 +24,9 @@ const AddContact = () => {
 
     return (
         <div className="contact-add">
-            <button className='contact-add_btn' title="Click to add new contact" onClick={(e)=>gowno(e)}><PersonAddIcon /></button>
+            <button className='contact-add_btn' title="Click to add a new contact" onClick={(e)=>gowno(e)}><PersonAddIcon /></button>
             <form onSubmit={(event) => handleSubmit(id, event)} className="contact-add_form">
-                <input type='text' className='contact-add_input' ref={ref}  placeholder={'Add new contact by ID'} onChange={(e) => { setId(e.target.value) }} value={id}></input>
+                <input type='text' className='contact-add_input' ref={ref}  placeholder={'Add a new contact by ID'} onChange={(e) => { setId(e.target.value) }} value={id}></input>
             </form>
 
         </div>

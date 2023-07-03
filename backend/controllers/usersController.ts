@@ -85,6 +85,9 @@ const sendContactRequest = async (req: TypedRequestBody<{ username: string }>, r
     const targetId = req.params.id
     const userId = req.cookies.user_id
 
+    //odkomentowac na produkcji, blokuje wysylanie requestow do siebie
+    //if (userId === targetId) return res.status(400).json({ message: "Cannot send request to yourself" })
+
     let foundUser
     try {
         foundUser = await User.findOne({ _id: targetId }).exec()
@@ -111,7 +114,7 @@ const answerContactRequest = async (req: TypedRequestBody<{ id: string, response
     const targetUserId = req.body.id
     const respondingUserId = req.cookies.user_id
     const response = req.body.response
-const userIds = [targetUserId, respondingUserId]
+    const userIds = [targetUserId, respondingUserId]
     try {
         const targetUser = await User.findOne({ _id: targetUserId })
         const respondingUser = await User.findOne({ _id: respondingUserId })
@@ -127,17 +130,17 @@ const userIds = [targetUserId, respondingUserId]
                 const newChat = await Chat.create({
                     users: userIds,
                 });
-        
+
                 await User.updateMany({ "_id": { $in: userIds } }, { $push: { contacts: newChat.id } })
-        
+
                 userIds.map(userId => {
                     pusher.sendToUser(userId, "new-channel", { message: "You joined a new channel" });
                 })
                 respondingUser.contactRequests = respondingUser.contactRequests.filter(request => request !== targetUserId)
                 await respondingUser.save()
-                await targetUser.save()    
+                await targetUser.save()
                 res.status(201).json({ newChatId: newChat.id })
-            } catch(e) {
+            } catch (e) {
                 console.log(e)
                 res.status(400).json({ message: "An error occured. Please try again later." })
             }

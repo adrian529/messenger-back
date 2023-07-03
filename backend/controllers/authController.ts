@@ -133,7 +133,6 @@ const getCredentials = async (req: Express.Request, res: Express.Response) => {
 
     const tokenFromGoogle = req.cookies.access_token;
 
-
     const urlForGettingUserInfo = 'https://openidconnect.googleapis.com/v1/userinfo';
     try {
         const userData = await axios({
@@ -153,8 +152,32 @@ const getCredentials = async (req: Express.Request, res: Express.Response) => {
     } catch (error: any) {
         console.log(error.stack)
     }
-
-
 }
 
-export { authWithGoogle, pusherAuth, getCredentials };
+const handleLogout = async (req: Express.Request, res: Express.Response) => {
+    // On client, also delete the accessToken
+
+    const cookies = req.cookies;
+    if (!cookies?.user_id || !cookies?.access_token) return res.sendStatus(204); //No content
+    const userId = cookies.user_id;
+
+    // Is refreshToken in db?
+    const foundUser = await User.findOne({ _id: userId })
+    if (!foundUser) {
+        res.clearCookie('access_token', { httpOnly: true, sameSite: 'none', secure: true, path: '/' });
+        res.clearCookie('idToken', { httpOnly: true, sameSite: 'none', secure: true });
+        res.clearCookie('user_id', { httpOnly: true, sameSite: 'none', secure: true });
+        return res.sendStatus(204);
+    }
+
+    // Delete refreshToken in db
+    foundUser.refreshToken = '0'
+    await foundUser.save()
+    res.clearCookie('access_token', { httpOnly: true, sameSite: 'none', secure: true, path: '/' });
+    res.clearCookie('idToken', { httpOnly: true, sameSite: 'none', secure: true });
+    res.clearCookie('user_id', { httpOnly: true, sameSite: 'none', secure: true });
+    return res.sendStatus(400);
+}
+
+
+export { authWithGoogle, pusherAuth, handleLogout, getCredentials };
