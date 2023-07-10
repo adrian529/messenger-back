@@ -6,7 +6,6 @@ type MessageProps = {
     userId: string;
     body: string;
     timestamp: string;
-    id: string;
 }
 
 const Message = (props: MessageProps) => {
@@ -18,7 +17,7 @@ const Message = (props: MessageProps) => {
     let messageClasses;
     messageClasses = props.userId === currentUserId ? 'message my-message' : 'message'
     return (
-        <li className={messageClasses} title={formatted} id={props.id}>{props.body}</li>
+        <li className={messageClasses} title={formatted}>{props.body}</li>
     )
 }
 

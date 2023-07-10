@@ -36,6 +36,7 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
 
         res.cookie('access_token', accessToken, { sameSite: "none", secure: true, maxAge: 24 * 60 * 60 * 1000 })
         res.cookie('idToken', token, { sameSite: "none", secure: true, maxAge: 24 * 60 * 60 * 1000 })
+        req.cookies.access_token = accessToken
         next()
     } catch (err: any) {
         console.log(err.stack)

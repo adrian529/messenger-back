@@ -12,15 +12,15 @@ import { TableBody } from '@mui/material';
 const ChatInput = (props: any) => {
 
     interface Message {
-        id: String;
-        userId: String;
-        body: String;
+        id: string;
+        userId: string;
+        body: string;
     }
     const currentUserId = useAppSelector(state => selectCurrentUserId(state))
     const chatId = props.chatId
 
     const [message, setMessage] = useState('')
-    const [sendMessage] = useSendMessageMutation({ id: String, userId: String, body: String })
+    const [sendMessage] = useSendMessageMutation()
 
     const handleSendMessage = (e): void => {
         e.preventDefault()
@@ -44,7 +44,7 @@ const ChatInput = (props: any) => {
 
     return (
         <form className='chat-input' onSubmit={handleSendMessage}>
-            <TextareaAutosize className="chat-input_textarea" maxRows={9} value={message} onKeyDown={handleKeyPress} required={true}
+            <TextareaAutosize className="chat-input_textarea" maxRows={9} value={message} onKeyDown={handleKeyPress}
                 onChange={(e) => setMessage(e.target.value)} />
             <button className='chat-input_btn' type="submit"><Send /></button>
         </form>

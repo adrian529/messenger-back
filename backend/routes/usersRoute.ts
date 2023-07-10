@@ -20,4 +20,6 @@ usersRoute.route('/contact')
 
 usersRoute.route('/:id')
     .get(verifyToken, getUser)
+usersRoute.route('/:email')
     .post(verifyToken, sendContactRequest)
+

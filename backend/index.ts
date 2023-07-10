@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: false }));
 
 const corsConfig = {
     credentials: true,
-    origin: 'http://localhost:5173',
+    origin: ['http://localhost:5173', 'http://192.168.100.26:5173, http:127.0.0.1:5173'],
 };
 
 app.use(cors(corsConfig))
@@ -25,7 +25,7 @@ app.use(bodyParser.json({ limit: '50mb', type: 'application/json' }));
 
 app.use((req, res, next) => {
     res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE, PATCH');
-    res.set('Access-Controll-Allow-Origin', 'http://localhost:5173')
+    res.set('Access-Controll-Allow-Origin', ['http://localhost:5173', 'http://192.168.100.26:5173, http:127.0.0.1:5173'])
     next();
 });
 

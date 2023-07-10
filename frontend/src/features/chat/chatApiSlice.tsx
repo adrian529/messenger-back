@@ -5,9 +5,38 @@ import {
 } from "@reduxjs/toolkit";
 
 interface Message {
-    id: String;
-    userId: String;
-    body: String;
+    id: string;
+    userId: string;
+    body: string;
+    timestamp?: number;
+}
+
+interface IUser {
+    avatar: string,
+    username: string,
+    _id: string
+}
+
+interface IChat {
+    data: {
+        user: IUser,
+        chat: {
+            users: [string],
+            messages: [
+                Message
+            ]
+        }
+    }
+}
+interface IContact {
+    contactsList: [
+        {
+            chatId: string,
+            id: string,
+            targetUser: IUser,
+            lastMessage?: Message
+        }
+    ]
 }
 
 export const chatApi = createApi({
@@ -16,27 +45,25 @@ export const chatApi = createApi({
     tagTypes: ['Chat'],
 
     endpoints: (builder) => ({
-        getChat: builder.mutation<any, String>({
-            query: (id: String) => ({
+        getChat: builder.mutation<IChat, string>({
+            query: (id: string) => ({
                 url: `chat/${id}`,
                 credentials: 'include'
             }),
-
-            providesTags: ['Chat'] as any,
         }),
-        getContacts: builder.query<any, String>({
+        getContacts: builder.query<any, void>({
             query: () => ({
                 url: `chat/contacts`,
                 credentials: 'include'
             }),
-            providesTags: ['Chat'] as any,
-            transformResponse: responseData => {
-                responseData = responseData.contactsList
-                const loadedContacts = responseData.map(contact => {
+            providesTags: ['Chat'],
+            transformResponse: (responseData: IContact) => {
+                let res = responseData.contactsList
+                const loadedContacts = res.map(contact => {
                     contact.id = contact.chatId
                     return contact
                 });
-                let sortedResponse = loadedContacts.sort((a,b) => b.lastMessage.timestamp - a.lastMessage.timestamp)
+                let sortedResponse = loadedContacts.sort((a, b) => b.lastMessage?.timestamp - a.lastMessage?.timestamp)
                 return sortedResponse
             }
         }),

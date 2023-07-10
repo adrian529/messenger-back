@@ -178,6 +178,8 @@ h1 {
   align-items: center;
   padding: 5px 10px;
   background-color: rgb(238, 238, 238);
+  transition: all 0.1s;
+
 }
 
 .contact-active {
@@ -187,6 +189,7 @@ h1 {
 .contact:hover {
   background-color: #aaa;
   cursor: pointer;
+  transition: all 0.1s;
 }
 
 .contact-img {
@@ -401,9 +404,10 @@ h1 {
   margin: 0 auto;
 }
 
-.menu-notActive {
+div.menu-notActive {
   height: 0;
   transition: height 0.2s;
+  visibility: hidden;
 }
 
 .menu-button {

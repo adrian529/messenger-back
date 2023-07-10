@@ -11,16 +11,7 @@ interface User {
 type T = Awaited<Promise<PromiseLike<object>>>
 const PersistCredentials = () => {
 
-    const getUserInfo = useGetUserInfoQuery()
-
-
-    useEffect(() => {
-        (async () => {
-            const userData = await getUserInfo
-        })()
-    }, [])
-
-
+    useGetUserInfoQuery()
     let content
 
     content = <Outlet />

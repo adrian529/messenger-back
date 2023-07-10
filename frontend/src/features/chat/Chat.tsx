@@ -13,6 +13,7 @@ import { useAppDispatch } from "../../app/hooks";
 import { setChattUrl } from "../auth/authSlice";
 import { Loading } from "../../assets/Loading";
 import { useGetContactsQuery } from "../chat/chatApiSlice"
+import { IChat, IUser } from "../../../..";
 
 const Chat = () => {
     interface Message {
@@ -22,14 +23,12 @@ const Chat = () => {
     }
     const chatRef = useRef<HTMLDivElement>(null);
 
-    const scrollToBottom = (behavior) => {
-        const element = document.getElementById('chuj');
+    const scrollToBottom = (behavior: ScrollBehavior) => {
+        const element = document.getElementById('chat-list');
         if (!element) {
             return
         }
-
         let chatHeight = element.scrollHeight
-
         element.scrollTo({
             top: chatHeight,
             behavior,
@@ -38,27 +37,29 @@ const Chat = () => {
     const dispatch = useAppDispatch()
     const pusher = pusherClient
     const { chatId } = useParams()
-    const [messages, setMessages] = useState([])
-    const [contact, setContact] = useState({})
+    const [messages, setMessages] = useState<Message[] | undefined>([])
+    const [contact, setContact] = useState<IUser | undefined>({})
+    const [scrollEffect, setScrollEffect] = useState<'instant' | 'smooth'>('instant')
+    const [effectRan, setEffectRan] = useState(false)
     const [getChat, {
         isLoading,
         error
-    }] = useGetChatMutation({ id: String })
+    }] = useGetChatMutation()
 
     let chatUrl = useAppSelector(selectChatUrl)
-    if(!chatUrl){
+    if (!chatUrl) {
         dispatch(setChattUrl())
     }
     let currentUrl = chatUrl ? chatUrl.split('/').pop() : chatId
 
-    
+
     const {
-        refetch 
+        refetch
     } = useGetContactsQuery()
 
     const getData = async () => {
         await getChat(currentUrl as string)
-            .then(res => {
+            .then((res) => {
                 setMessages(res.data.chat.messages)
                 setContact(res.data.user)
             }
@@ -67,20 +68,17 @@ const Chat = () => {
             })
     }
 
-    useEffect(() => {
-        scrollToBottom('smooth')
-    }, [messages])
 
     useEffect(() => {
-        setMessages([])
+        setScrollEffect('instant')
         if (currentUrl) {
-            pusher.signin()
             let channel = pusher.subscribe(currentUrl) // channel = chat ID
             channel.unbind()
             channel.bind('new-message', async (data: any) => {
                 //callback
+                setScrollEffect('smooth')
                 refetch()
-                setMessages((prev) => [...prev, data.newMessage])
+                setMessages((prev) => [...prev!, data.newMessage])
             })
             pusher.bind('new-channel', async (data: any) => {
                 //callback
@@ -88,23 +86,26 @@ const Chat = () => {
             })
         }
         getData()
-        scrollToBottom('instant')
     }, [chatUrl])
+
+    useEffect(() => {
+        scrollToBottom(scrollEffect)
+    }, [messages])
 
     if (currentUrl === '' || null || undefined) {
         return null
-    } else if(isLoading) {
+    } else if (isLoading) {
         return <Loading />
     } else {
         return (
             <div className="chat-area">
-                <ChatHeader username={contact.username} avatar={contact.avatar}/>
+                <ChatHeader username={contact.username} avatar={contact.avatar} />
                 <div className="chat" id="chat" ref={chatRef}>
-                    <ul id="chuj">
+                    <ul id="chat-list">
                         <li id='top'></li>
                         {messages.map((message: Message, index) => {
                             return (
-                                <Message userId={message.userId} timestamp={message.timestamp} body={message.body} key={index} id={`${index}`} />
+                                <Message userId={message.userId} timestamp={message.timestamp} body={message.body} key={index} />
                             )
                         })
                         }

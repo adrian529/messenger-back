@@ -17,11 +17,12 @@ interface TypedRequestBody<T> extends Express.Request {
 }
 
 interface IUser extends mongoose.Document {
-    username: String;
-    avatar: String;
-    email: String;
-    refreshToken?: String;
-    contacts?: String[];
+    username: string;
+    avatar: string;
+    email: string;
+    contactRequests: string[]
+    refreshToken?: string;
+    contacts?: string[];
 }
 
 const authWithGoogle = async (req: Express.Request, res: Express.Response) => {
@@ -145,8 +146,8 @@ const getCredentials = async (req: Express.Request, res: Express.Response) => {
 
         let userEmail = userData.data.email
 
-        let foundUser: any = await User.findOne({ email: userEmail }, '-__v -refreshToken')
-
+        let foundUser: IUser | null = await User.findOne({ email: userEmail }, '-__v -refreshToken')
+        if (!foundUser){ return}
         const { username, contacts, avatar, email, id, contactRequests } = foundUser
         res.json({ username, contacts, avatar, email, id, contactRequests });
     } catch (error: any) {
@@ -155,28 +156,21 @@ const getCredentials = async (req: Express.Request, res: Express.Response) => {
 }
 
 const handleLogout = async (req: Express.Request, res: Express.Response) => {
-    // On client, also delete the accessToken
-
     const cookies = req.cookies;
-    if (!cookies?.user_id || !cookies?.access_token) return res.sendStatus(204); //No content
-    const userId = cookies.user_id;
-
-    // Is refreshToken in db?
-    const foundUser = await User.findOne({ _id: userId })
-    if (!foundUser) {
+    try {
+        const userId = cookies.user_id;
+        const foundUser = await User.findOne({ _id: userId })
+        if (foundUser) {
+            foundUser.refreshToken = '0'
+            await foundUser.save()
+        }
+        // Delete refreshToken in db
+    } finally {
         res.clearCookie('access_token', { httpOnly: true, sameSite: 'none', secure: true, path: '/' });
         res.clearCookie('idToken', { httpOnly: true, sameSite: 'none', secure: true });
         res.clearCookie('user_id', { httpOnly: true, sameSite: 'none', secure: true });
         return res.sendStatus(204);
     }
-
-    // Delete refreshToken in db
-    foundUser.refreshToken = '0'
-    await foundUser.save()
-    res.clearCookie('access_token', { httpOnly: true, sameSite: 'none', secure: true, path: '/' });
-    res.clearCookie('idToken', { httpOnly: true, sameSite: 'none', secure: true });
-    res.clearCookie('user_id', { httpOnly: true, sameSite: 'none', secure: true });
-    return res.sendStatus(400);
 }
 
 

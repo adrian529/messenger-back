@@ -42,7 +42,7 @@ const ContactRequest = (props: ContactProps) => {
     } else {
         return (
             <div className="contact-request">
-                <img src={user.avatar} className="contact-img"
+                <img src={user.avatar} className="contact-img" alt="profile picture"
                     onError={({ currentTarget }) => {
                         currentTarget.onerror = null; // prevents looping
                         currentTarget.src = "https://i.ytimg.com/vi/VqWmSoWvQqo/mqdefault.jpg";

@@ -41,7 +41,7 @@ function Login() {
 
         // this ensures that the social login method is run only when the path is /auth/google
         useEffect(() => {
-            //wyjebac to w produkcji
+            //wyjebac to w produkcji huj gowno
             if (effectCalled.current) return;
             counter.current += 1;
             setTimesRun(counter.current);

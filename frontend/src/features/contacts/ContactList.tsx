@@ -12,6 +12,14 @@ import { Loading } from "../../assets/Loading"
 import { useAppDispatch } from "../../app/hooks"
 import { useSendLogoutMutation } from "../auth/authApiSlice"
 import { useNavigate } from "react-router-dom"
+import { IUser, Message } from '../../../../index'
+import { useGetUserInfoQuery } from "../auth/authApiSlice"
+interface Icontact {
+    chatId: string,
+    id: string,
+    lastMessage: Message,
+    targetUser: IUser
+}
 
 const ContactList = () => {
 
@@ -33,6 +41,7 @@ const ContactList = () => {
         logout()
         navigate('/auth')
     }
+    const { refetch: refetchCurrentUser } = useGetUserInfoQuery()
 
     const {
         data: contacts,
@@ -48,27 +57,32 @@ const ContactList = () => {
                 //pusher.signin()
 
                 for (let channel of channels) {
-                    channel.bind('new-message', async (data: any) => {
+                    channel.bind('new-message', async () => {
                         //callback
-                        console.log('xd newmsg', data)
                         refetch()
                     })
                 }
-                pusher.bind('new-channel', async (data: any) => {
+                pusher.bind('new-channel', async () => {
                     //callback
+                    refetch()
                 })
-            } else {
-                return
             }
         } catch (e) {
             console.log(contactRequests)
         }
     }, [chats, requests, currentUser])
 
+    useEffect(() => {
+        pusher.signin()
+
+        pusher.bind('contact-request', async () => {
+            await refetchCurrentUser()
+        })
+    }, [])
 
     let menuActive = active ? 'menu-active' : 'menu-notActive'
 
-    let gowno = []
+    let contactsList: Icontact[] = []
 
 
     const RequestsList = requests.length !== 0 ? (
@@ -86,31 +100,18 @@ const ContactList = () => {
         : null
 
     if (contacts) {
-        Object.values(contacts).forEach(function (chat, index) {
-            gowno.push(chat)
+        Object.values(contacts as Icontact[]).forEach(function (chat: Icontact, index) {
+            contactsList.push(chat)
         })
     }
-    let chuj = isLoading ? (<Loading />) : (
-        <div className="contact-list">
-            {
-                gowno.map((chat, index) => {
-                    if (chat.chatId === currentUrl) {
-                        return <Contact chatId={chat.chatId} lastMessage={chat.lastMessage} targetUser={chat.targetUser} key={index} activeContact={true} />
-                    } else {
-                        return <Contact chatId={chat.chatId} lastMessage={chat.lastMessage} targetUser={chat.targetUser} key={index} />
-                    }
-                })
-            }
-        </div>
-    )
 
     const isActiveMobile = (chatUrl === null || chatUrl === '' || chatUrl === 'http://localhost:5173/') ? 'sidebar-active' : null
-    if (contacts) {
+    if (!isLoading) {
         return (
             <div className={`sidebar ${isActiveMobile}`}>
                 <div className="current-user-card">
                     <div className="current-user-left">
-                        <img className="contact-img" src={currentUser.avatar}></img>
+                        <img className="contact-img" alt="profile picture" src={currentUser.avatar}></img>
                         <div className="contact-name">{currentUser.username}</div>
                     </div>
                     <button className={`open-menu-button`} onClick={() => setActive(prev => !prev)}><ExpandMoreIcon className={menuActive} /></button>
@@ -122,11 +123,23 @@ const ContactList = () => {
                         </li>
                     </ul>
                 </div>
-                {chuj}
+                <div className="contact-list">
+                    {
+                        contactsList.map((chat, index) => {
+                            if (chat.chatId === currentUrl) {
+                                return <Contact chatId={chat.chatId} lastMessage={chat.lastMessage} targetUser={chat.targetUser} key={index} activeContact={true} />
+                            } else {
+                                return <Contact chatId={chat.chatId} lastMessage={chat.lastMessage} targetUser={chat.targetUser} key={index} />
+                            }
+                        })
+                    }
+                </div>
                 {RequestsList}
                 <AddContact />
             </div>
         )
+    } else {
+        return (<Loading />)
     }
 }
 

@@ -19,7 +19,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
             })
         }),
 
-        sendLogout: builder.mutation({
+        sendLogout: builder.mutation<any, void>({
             query: () => ({
                 url: '/auth/logout',
                 method: 'GET',
@@ -45,7 +45,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
                 withCredentials: true,
             }),
         }),
-        getUserInfo: builder.query({
+        getUserInfo: builder.query<any, void>({
             query: () => ({
                 url: '/auth/userinfo',
                 method: 'GET',
@@ -57,8 +57,9 @@ export const authApiSlice = apiSlice.injectEndpoints({
                 try {
                     const { data } = await queryFulfilled
                     dispatch(setCredentials(data))
+                    return data
                 } catch (err) {
-                    console.log(err)
+                    return
                 }
             },
         })

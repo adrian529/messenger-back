@@ -1,4 +1,3 @@
-import ChatArea from "./features/chat/ChatArea";
 import Chat from "./features/chat/Chat";
 import ContactList from "./features/contacts/ContactList";
 import { Routes, Route } from 'react-router-dom'

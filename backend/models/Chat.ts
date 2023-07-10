@@ -15,7 +15,7 @@ interface IChat extends mongoose.Document {
 // 2. Create a Schema corresponding to the document interface.
 const chatSchema = new Schema<IChat>({
     users: { type: [String], required: true },
-    messages: { type: [Message.schema] },
+    messages: { type: [Message] },
 });
 
 // 3. Create a Model.

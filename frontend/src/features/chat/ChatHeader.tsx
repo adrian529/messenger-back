@@ -9,7 +9,7 @@ const ChatHeader = (props: headerProps
     return (
         <div className="chat-header">
             <a href="/" className="mobile" style={{'fontSize': 0}}><ArrowBackIcon/></a>
-            <img className="contact-img header-img" src={props.avatar}
+            <img className="contact-img header-img" src={props.avatar} alt="profile picture"
              onError={({ currentTarget }) => {
                 currentTarget.onerror = null; // prevents looping
                 currentTarget.src = "https://i.ytimg.com/vi/VqWmSoWvQqo/mqdefault.jpg";

@@ -1,7 +1,5 @@
 import Express from 'express';
-import User from '../models/User';
 import Chat from '../models/Chat';
-import Message from '../models/Message';
 import Pusher from "pusher"
 import 'dotenv/config'
 
