@@ -1,4 +1,4 @@
-import React, { Component, ErrorInfo, ReactNode } from "react";
+import { Component, ErrorInfo, ReactNode } from "react";
 import MissingPage from "./MissingPage";
 interface Props {
     children?: ReactNode;

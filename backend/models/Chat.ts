@@ -1,6 +1,5 @@
-import { Schema, model } from 'mongoose';
+import mongoose, { Schema, model } from 'mongoose';
 import Message from './Message';
-import mongoose from 'mongoose';
 interface IMessage {
     userId: string;
     body: string;

@@ -1,6 +1,6 @@
-import { format, parseJSON } from 'date-fns'
-import { selectCurrentUserId } from '../auth/authSlice'
-import { useAppSelector } from '../../app/hooks'
+import { format, parseJSON } from 'date-fns';
+import { useAppSelector } from '../../app/hooks';
+import { selectCurrentUserId } from '../auth/authSlice';
 
 type MessageProps = {
     userId: string;

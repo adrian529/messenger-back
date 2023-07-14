@@ -1,10 +1,9 @@
-import React from 'react'
-import { useState } from 'react'
-import TextareaAutosize from 'react-textarea-autosize';
 import Send from '@mui/icons-material/Send';
+import React, { useState } from 'react';
+import TextareaAutosize from 'react-textarea-autosize';
+import { useAppSelector } from "../../app/hooks";
+import { selectCurrentUserId } from "../auth/authSlice";
 import { useSendMessageMutation } from './chatApiSlice';
-import { selectCurrentUserId } from "../auth/authSlice"
-import { useAppSelector } from "../../app/hooks"
 
 
 const ChatInput = (props: any) => {

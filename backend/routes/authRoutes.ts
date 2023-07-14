@@ -1,5 +1,5 @@
-import { authWithGoogle, pusherAuth, getCredentials, handleLogout } from '../controllers/authController'
 import express from 'express';
+import { authWithGoogle, getCredentials, handleLogout, pusherAuth } from '../controllers/authController';
 import { verifyToken } from "../middleware/verifyToken";
 
 export const authRoute = express.Router();

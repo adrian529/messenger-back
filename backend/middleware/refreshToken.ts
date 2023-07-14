@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
-import User from '../models/User';
 import axios from 'axios';
+import { NextFunction, Request, Response } from 'express';
+import User from '../models/User';
 export const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.cookies.idToken && !req.cookies.user_id) {
         return res.status(400)

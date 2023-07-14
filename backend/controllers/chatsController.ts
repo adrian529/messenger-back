@@ -1,7 +1,7 @@
 import Express from 'express';
 import Chat from '../models/Chat';
-import Pusher = require('pusher');
 import User from '../models/User';
+import Pusher = require('pusher');
 interface TypedRequestBody<T> extends Express.Request {
     body: T
 }
@@ -99,7 +99,5 @@ const newChat = async (req: TypedRequestBody<{ userIds: string[], chatAdminId: s
 }
 
 export {
-    getChat,
-    newChat,
-    getContacts
-}
+    getChat, getContacts, newChat
+};

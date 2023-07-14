@@ -1,7 +1,7 @@
-import { setChattUrl } from "../auth/authSlice"
-import { useAppDispatch } from "../../app/hooks"
 import { formatDistanceToNow, parseJSON } from 'date-fns'
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
+import { useAppDispatch } from "../../app/hooks"
+import { setChattUrl } from "../auth/authSlice"
 
 type ContactProps = {
     chatId: string;

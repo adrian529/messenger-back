@@ -1,10 +1,8 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import { combineReducers } from '@reduxjs/toolkit';
-import { useGetMessagesQuery } from './api/apiSlice';
-import { apiSlice } from './api/apiSlice';
+import { Action, ThunkAction, combineReducers, configureStore } from '@reduxjs/toolkit';
+import { setupListeners } from "@reduxjs/toolkit/dist/query";
 import { authSlice } from '../features/auth/authSlice';
 import { chatApi } from '../features/chat/chatApiSlice';
-import { setupListeners } from "@reduxjs/toolkit/dist/query";
+import { apiSlice } from './api/apiSlice';
 
 const rootReducer = combineReducers({
     [apiSlice.reducerPath]: apiSlice.reducer,

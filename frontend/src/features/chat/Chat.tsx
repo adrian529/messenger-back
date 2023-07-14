@@ -1,17 +1,15 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
+import { IUser } from "../../../..";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { pusherClient } from "../../app/pusherClient";
+import { Loading } from "../../assets/Loading";
+import { selectChatUrl, setChattUrl } from "../auth/authSlice";
+import { useGetContactsQuery } from "../chat/chatApiSlice";
+import ChatHeader from "./ChatHeader";
+import ChatInput from "./ChatInput";
 import Message from "./Message";
 import { useGetChatMutation } from "./chatApiSlice";
-import { useAppSelector } from "../../app/hooks";
-import { useParams } from "react-router-dom";
-import { pusherClient } from "../../app/pusherClient";
-import { selectChatUrl } from "../auth/authSlice";
-import ChatInput from "./ChatInput";
-import ChatHeader from "./ChatHeader"
-import { useAppDispatch } from "../../app/hooks";
-import { setChattUrl } from "../auth/authSlice";
-import { Loading } from "../../assets/Loading";
-import { useGetContactsQuery } from "../chat/chatApiSlice"
-import { IUser } from "../../../..";
 
 const Chat = () => {
     interface Message {
@@ -50,7 +48,7 @@ const Chat = () => {
     const [messages, setMessages] = useState<Message[] | undefined>([])
     const [contact, setContact] = useState<IUser | undefined>()
     const [scrollEffect, setScrollEffect] = useState<ScrollBehavior>('auto')
-    const [effectRan, setEffectRan] = useState(false)
+    
     const [getChat, {
         isLoading,
         error

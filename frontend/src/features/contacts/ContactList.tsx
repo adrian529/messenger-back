@@ -1,17 +1,15 @@
-import Contact from "./Contact"
-import { selectCurrentUser } from "../auth/authSlice"
-import { useAppSelector } from "../../app/hooks"
-import { pusherClient } from "../../app/pusherClient"
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { useEffect, useState } from "react"
-import AddContact from "../user/AddContact"
-import ContactRequest from "./ContactRequest"
-import { selectChatUrl } from "../auth/authSlice"
-import { useGetContactsQuery } from "../chat/chatApiSlice"
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useSendLogoutMutation } from "../auth/authApiSlice"
 import { useNavigate } from "react-router-dom"
 import { IUser, Message } from '../../../../index'
-import { useGetUserInfoQuery } from "../auth/authApiSlice"
+import { useAppSelector } from "../../app/hooks"
+import { pusherClient } from "../../app/pusherClient"
+import { useGetUserInfoQuery, useSendLogoutMutation } from "../auth/authApiSlice"
+import { selectChatUrl, selectCurrentUser } from "../auth/authSlice"
+import { useGetContactsQuery } from "../chat/chatApiSlice"
+import AddContact from "../user/AddContact"
+import Contact from "./Contact"
+import ContactRequest from "./ContactRequest"
 interface Icontact {
     chatId: string,
     id: string,
@@ -51,7 +49,6 @@ const ContactList = () => {
             if (chats && currentUser) {
                 setRequests(currentUser.contactRequests!)
                 let channels = chats.map(channelName => pusher.subscribe(channelName));
-                //pusher.signin()
 
                 for (let channel of channels) {
                     channel.bind('new-message', async () => {
@@ -84,7 +81,6 @@ const ContactList = () => {
 
     const RequestsList = requests.length !== 0 ? (
         <>
-
             <div className="contact-requests">
                 {
                     requests.map((contact, index) => (

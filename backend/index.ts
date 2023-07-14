@@ -1,12 +1,12 @@
-import express, { Express, Request, Response } from 'express';
-import { connect } from 'mongoose'
-import { usersRoute } from './routes/usersRoute';
-import { chatRoute } from './routes/chatRoutes';
-import { authRoute } from './routes/authRoutes';
 import bodyParser from 'body-parser';
-import cors from 'cors'
-import 'dotenv/config'
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import 'dotenv/config';
+import express, { Express, Request, Response } from 'express';
+import { connect } from 'mongoose';
+import { authRoute } from './routes/authRoutes';
+import { chatRoute } from './routes/chatRoutes';
+import { usersRoute } from './routes/usersRoute';
 
 const port = process.env.PORT;
 

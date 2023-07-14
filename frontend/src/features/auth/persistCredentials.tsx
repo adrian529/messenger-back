@@ -1,7 +1,6 @@
-import { Outlet } from "react-router-dom";
-import { useEffect } from 'react'
+import { useEffect } from 'react';
+import { Outlet, useNavigate } from "react-router-dom";
 import { useGetUserInfoQuery } from "./authApiSlice";
-import { useNavigate } from "react-router-dom";
 
 const PersistCredentials = () => {
 
@@ -11,7 +10,6 @@ const PersistCredentials = () => {
     useEffect(() => {
         if (isError) {
             navigate('/auth')
-
         }
     }, [isError])
 

@@ -1,17 +1,11 @@
 require('dotenv').config()
-import User from '../models/User';
 import axios from 'axios';
 import Express from 'express';
-import Pusher from "pusher"
 import mongoose from 'mongoose';
+import User from '../models/User';
+import { pusherServer } from '../pusherServer';
 
-const pusher = new Pusher({
-    appId: process.env.PUSHER_APP_ID as string,
-    key: process.env.PUSHER_KEY as string,
-    secret: process.env.PUSHER_SECRET as string,
-    cluster: process.env.PUSHER_CLUSTER as string,
-    useTLS: true
-});
+const pusher = pusherServer
 interface TypedRequestBody<T> extends Express.Request {
     body: T
 }
@@ -61,21 +55,19 @@ const authWithGoogle = async (req: Express.Request, res: Express.Response) => {
         });
 
         let userEmail = userData.data.email
-
         let foundUser = await User.findOne({ email: userEmail }, '-__v -refreshToken')
 
         if (!foundUser) {
-
             await User.create({
                 username: userData.data.name,
                 email: userEmail,
                 avatar: userData.data.picture,
                 refreshToken: data.refresh_token
             })
-            foundUser = await User.findOne({ email: userEmail })
+            foundUser = await User.findOne({ email: userEmail }, '-__v -refreshToken')
         }
         if (!foundUser) {
-            return res.json({message: "Error. Please try again"})
+            return res.json({ message: "Error. Please try again" })
         }
         //strore users' access token in DB
         foundUser.refreshToken = data.refresh_token
@@ -177,4 +169,4 @@ const handleLogout = async (req: Express.Request, res: Express.Response) => {
 }
 
 
-export { authWithGoogle, pusherAuth, handleLogout, getCredentials };
+export { authWithGoogle, getCredentials, handleLogout, pusherAuth };

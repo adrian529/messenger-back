@@ -1,12 +1,12 @@
-import Chat from "./features/chat/Chat";
-import { Routes, Route } from 'react-router-dom'
-import Layout from "./assets/Layout";
-import Login from "./features/auth/Login";
-import PersistCredentials from "./features/auth/persistCredentials";
 import { createBrowserHistory } from "history";
+import { Route, Routes } from 'react-router-dom';
 import { useAppDispatch } from "./app/hooks";
-import { setChattUrl } from "./features/auth/authSlice";
+import Layout from "./assets/Layout";
 import MissingPage from "./assets/MissingPage";
+import Login from "./features/auth/Login";
+import { setChattUrl } from "./features/auth/authSlice";
+import PersistCredentials from "./features/auth/persistCredentials";
+import Chat from "./features/chat/Chat";
 
 function App() {
 

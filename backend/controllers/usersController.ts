@@ -1,9 +1,9 @@
+import bcrypt from 'bcrypt';
+import * as dotenv from 'dotenv'; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
 import Express from 'express';
-import User from '../models/User';
-import bcrypt from 'bcrypt'
 import Chat from '../models/Chat';
+import User from '../models/User';
 import Pusher = require('pusher');
-import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
 dotenv.config()
 
 interface TypedRequestBody<T> extends Express.Request {
@@ -149,9 +149,7 @@ const answerContactRequest = async (req: TypedRequestBody<{ id: string, response
 }
 
 export {
-    addUser,
-    deleteContact,
+    addUser, answerContactRequest, deleteContact,
     getUser,
-    sendContactRequest,
-    answerContactRequest
-}
+    sendContactRequest
+};

@@ -1,9 +1,9 @@
 import {
     addUser,
+    answerContactRequest,
     deleteContact,
     getUser,
-    sendContactRequest,
-    answerContactRequest
+    sendContactRequest
 } from "../controllers/usersController";
 import { verifyToken } from "../middleware/verifyToken";
 

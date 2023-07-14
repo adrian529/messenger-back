@@ -1,5 +1,5 @@
+import { NextFunction, Request, Response } from 'express';
 import { OAuth2Client } from 'google-auth-library';
-import { Express, Request, Response, NextFunction } from 'express';
 import { refreshToken } from './refreshToken';
 
 export const verifyToken = (req: Request, res: Response, next: NextFunction) => {

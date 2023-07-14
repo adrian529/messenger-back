@@ -1,17 +1,20 @@
-import { useAppDispatch } from "../../app/hooks"
-import { useGetUserQuery } from "../user/userApiSlice"
-import { useContactRequestResponseMutation } from "../user/userApiSlice"
-import Done from '@mui/icons-material/Done';
 import Close from '@mui/icons-material/Close';
+import Done from '@mui/icons-material/Done';
+import { useContactRequestResponseMutation, useGetUserQuery } from "../user/userApiSlice";
+import { useGetUserInfoQuery } from '../auth/authApiSlice';
+import { useAppDispatch } from '../../app/hooks';
+import { setCredentials } from '../auth/authSlice';
+
 type ContactProps = {
     contact: string;
 }
 
 const ContactRequest = (props: ContactProps) => {
 
+    const dispatch = useAppDispatch()
+
     const {
         data: user,
-        isFetching,
         isLoading,
     } = useGetUserQuery(props.contact)
 
@@ -21,10 +24,14 @@ const ContactRequest = (props: ContactProps) => {
         e.preventDefault()
         const id = user._id
         contactReponse({ id, response })
-            .then(res => console.log('res', res))
+            .then((data: any) => {
+                if (response === true) {
+                    dispatch(setCredentials((state: any) => state.contactRequests.push(data.newChatId)))
+                }
+            })
     }
     if (isLoading) {
-        return (<>loading</>)
+        return (<></>)
     } else {
         return (
             <div className="contact-request">

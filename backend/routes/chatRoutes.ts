@@ -1,8 +1,7 @@
-import { newMessage } from "../controllers/messagesController";
-import { getChat, newChat } from "../controllers/chatsController";
-import { verifyToken } from "../middleware/verifyToken";
-import { getContacts } from "../controllers/chatsController";
 import express from 'express';
+import { getChat, getContacts, newChat } from "../controllers/chatsController";
+import { newMessage } from "../controllers/messagesController";
+import { verifyToken } from "../middleware/verifyToken";
 
 export const chatRoute = express.Router();
 

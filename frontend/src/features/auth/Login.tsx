@@ -1,10 +1,10 @@
-import { useEffect } from 'react';
-import { useGoogleLoginMutation } from '../auth/authApiSlice';
 import queryString from 'query-string';
+import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAppSelector } from '../../app/hooks';
-import { selectCurrentUser } from '../auth/authSlice';
 import { Loading } from '../../assets/Loading';
+import { useGoogleLoginMutation } from '../auth/authApiSlice';
+import { selectCurrentUser } from '../auth/authSlice';
 function Login() {
 
     const location = useLocation();
