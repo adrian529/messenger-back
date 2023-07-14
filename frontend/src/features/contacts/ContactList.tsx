@@ -8,8 +8,6 @@ import ContactRequest from "./ContactRequest"
 import { selectChatUrl } from "../auth/authSlice"
 import { useGetContactsQuery } from "../chat/chatApiSlice"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Loading } from "../../assets/Loading"
-import { useAppDispatch } from "../../app/hooks"
 import { useSendLogoutMutation } from "../auth/authApiSlice"
 import { useNavigate } from "react-router-dom"
 import { IUser, Message } from '../../../../index'
@@ -24,10 +22,9 @@ interface Icontact {
 const ContactList = () => {
 
     const currentUser = useAppSelector(state => selectCurrentUser(state))
-    const chats: string[] | null = currentUser.contacts
-    const contactRequests: string[] | null = currentUser.contactRequests
+    const chats: string[] = currentUser.contacts
+    const contactRequests: string[] = currentUser.contactRequests
     const pusher = pusherClient
-    const dispatch = useAppDispatch()
     const navigate = useNavigate()
     const [requests, setRequests] = useState([])
     const [active, setActive] = useState(false)
@@ -51,8 +48,8 @@ const ContactList = () => {
 
     useEffect(() => {
         try {
-            if (chats) {
-                setRequests(currentUser.contactRequests)
+            if (chats && currentUser) {
+                setRequests(currentUser.contactRequests!)
                 let channels = chats.map(channelName => pusher.subscribe(channelName));
                 //pusher.signin()
 
@@ -105,13 +102,13 @@ const ContactList = () => {
         })
     }
 
-    const isActiveMobile = (chatUrl === null || chatUrl === '' || chatUrl === 'http://localhost:5173/') ? 'sidebar-active' : null
+    const isActiveMobile = (chatUrl === null || chatUrl === '' || chatUrl === 'http://localhost:4173/') ? 'sidebar-active' : null
     if (!isLoading) {
         return (
             <div className={`sidebar ${isActiveMobile}`}>
                 <div className="current-user-card">
                     <div className="current-user-left">
-                        <img className="contact-img" alt="profile picture" src={currentUser.avatar}></img>
+                        <img className="contact-img" alt="profile picture" src={currentUser.avatar || "https://i.ytimg.com/vi/VqWmSoWvQqo/mqdefault.jpg"}></img>
                         <div className="contact-name">{currentUser.username}</div>
                     </div>
                     <button className={`open-menu-button`} onClick={() => setActive(prev => !prev)}><ExpandMoreIcon className={menuActive} /></button>
@@ -139,7 +136,7 @@ const ContactList = () => {
             </div>
         )
     } else {
-        return (<Loading />)
+        return (<></>)
     }
 }
 

@@ -1,6 +1,4 @@
-import { useNavigate } from "react-router-dom"
 import { setChattUrl } from "../auth/authSlice"
-import { useAppSelector } from "../../app/hooks"
 import { useAppDispatch } from "../../app/hooks"
 import { formatDistanceToNow, parseJSON } from 'date-fns'
 import { useState, useEffect } from "react"
@@ -19,11 +17,11 @@ interface Message {
     id: string;
     userId: string;
     body: string;
-    timestamp: number;
+    timestamp?: number;
 }
 
 const Contact = (props: ContactProps) => {
-
+    if (!props.targetUser) { return (<></>) }
     const dispatch = useAppDispatch()
     const [timestamp, setTimestamp] = useState('')
 
@@ -36,7 +34,7 @@ const Contact = (props: ContactProps) => {
 
 
     useEffect(() => {
-        if (lastMessage.timestamp > 0) {
+        if (lastMessage.timestamp !== undefined && lastMessage.timestamp > 0) {
             const date = parseJSON(lastMessage.timestamp)
             let timeAgo = formatDistanceToNow(date)
             setTimestamp(timeAgo)
@@ -44,7 +42,7 @@ const Contact = (props: ContactProps) => {
             const interval = setInterval(() => {
                 let timeAgo = formatDistanceToNow(date)
                 setTimestamp(timeAgo)
-            }, 1000 * 60); //runs every 60 seconds
+            }, 1000 * 10); //runs every 60 seconds
             return () => clearInterval(interval);
         }
     }, [props])

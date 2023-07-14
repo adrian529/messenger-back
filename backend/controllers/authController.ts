@@ -1,7 +1,7 @@
 require('dotenv').config()
 import User from '../models/User';
 import axios from 'axios';
-import Express, { CookieOptions } from 'express';
+import Express from 'express';
 import Pusher from "pusher"
 import mongoose from 'mongoose';
 
@@ -72,7 +72,10 @@ const authWithGoogle = async (req: Express.Request, res: Express.Response) => {
                 avatar: userData.data.picture,
                 refreshToken: data.refresh_token
             })
-            return foundUser = await User.findOne({ email: userEmail })
+            foundUser = await User.findOne({ email: userEmail })
+        }
+        if (!foundUser) {
+            return res.json({message: "Error. Please try again"})
         }
         //strore users' access token in DB
         foundUser.refreshToken = data.refresh_token
@@ -147,7 +150,7 @@ const getCredentials = async (req: Express.Request, res: Express.Response) => {
         let userEmail = userData.data.email
 
         let foundUser: IUser | null = await User.findOne({ email: userEmail }, '-__v -refreshToken')
-        if (!foundUser){ return}
+        if (!foundUser) { return }
         const { username, contacts, avatar, email, id, contactRequests } = foundUser
         res.json({ username, contacts, avatar, email, id, contactRequests });
     } catch (error: any) {

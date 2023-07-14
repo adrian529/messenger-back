@@ -4,7 +4,7 @@ import { RootState } from "../../app/store"
 /* username, contacts, avatar, email, id */
 export const authSlice = createSlice({
     name: 'auth',
-    initialState: { id: null, username: null, contacts: null, avatar: null, email: null, contactRequests: null, url: '' },
+    initialState: { id: '', username: null, contacts: [], avatar: null, email: null, contactRequests: [], url: '' },
     reducers: {
         setCredentials: (state, action) => {
             const { id, username, contacts, avatar, email, contactRequests } = action.payload
@@ -16,33 +16,22 @@ export const authSlice = createSlice({
             state.contactRequests = contactRequests
         },
         logOut: (state) => {
-            state.id = null
+            state.id = ''
             state.username = null
-            state.contacts = null
+            state.contacts = []
             state.avatar = null
             state.email = null
-            state.contactRequests = null
+            state.contactRequests = []
 
-        },
-        addNewContact: (state: RootState, action) => {
-            const { id } = action.payload
-            state.contactRequests = state.contactRequests.filter(req => req !== id)
-            state.contacts.push(id)
-        },
-        rejectContact: (state, action) => {
-            const { id } = action.payload
-            state.contactRequests = state.contactRequests.filter(req !== id)
         },
         setChattUrl: (state) => {
             state.url = document.location.href
         }
     }
 })
-
-export const { setCredentials, logOut, addNewContact, rejectContact, setChattUrl } = authSlice.actions
-
 export default authSlice.reducer
 
+export const { setCredentials, logOut, setChattUrl } = authSlice.actions
 export const selectCurrentUser = (state: RootState) => state.authSlice
 export const selectCurrentUserId = (state: RootState) => state.authSlice.id
 export const selectCurrentUserRequests = (state: RootState) => state.authSlice.contactRequests

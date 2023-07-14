@@ -1,19 +1,17 @@
 import { useEffect, useState, useRef } from "react";
 import Message from "./Message";
 import { useGetChatMutation } from "./chatApiSlice";
-import { selectCurrentUser } from "../auth/authSlice";
 import { useAppSelector } from "../../app/hooks";
 import { useParams } from "react-router-dom";
 import { pusherClient } from "../../app/pusherClient";
 import { selectChatUrl } from "../auth/authSlice";
 import ChatInput from "./ChatInput";
-import { useLocation } from "react-router-dom";
 import ChatHeader from "./ChatHeader"
 import { useAppDispatch } from "../../app/hooks";
 import { setChattUrl } from "../auth/authSlice";
 import { Loading } from "../../assets/Loading";
 import { useGetContactsQuery } from "../chat/chatApiSlice"
-import { IChat, IUser } from "../../../..";
+import { IUser } from "../../../..";
 
 const Chat = () => {
     interface Message {
@@ -21,8 +19,20 @@ const Chat = () => {
         body: string;
         timestamp: string;
     }
-    const chatRef = useRef<HTMLDivElement>(null);
 
+    interface IChat {
+        data: {
+            user: IUser,
+            chat: {
+                users: [string],
+                messages: [
+                    Message
+                ]
+            }
+        }
+    }
+
+    const chatRef = useRef<HTMLDivElement>(null);
     const scrollToBottom = (behavior: ScrollBehavior) => {
         const element = document.getElementById('chat-list');
         if (!element) {
@@ -38,8 +48,8 @@ const Chat = () => {
     const pusher = pusherClient
     const { chatId } = useParams()
     const [messages, setMessages] = useState<Message[] | undefined>([])
-    const [contact, setContact] = useState<IUser | undefined>({})
-    const [scrollEffect, setScrollEffect] = useState<'instant' | 'smooth'>('instant')
+    const [contact, setContact] = useState<IUser | undefined>()
+    const [scrollEffect, setScrollEffect] = useState<ScrollBehavior>('auto')
     const [effectRan, setEffectRan] = useState(false)
     const [getChat, {
         isLoading,
@@ -52,25 +62,27 @@ const Chat = () => {
     }
     let currentUrl = chatUrl ? chatUrl.split('/').pop() : chatId
 
-
     const {
         refetch
     } = useGetContactsQuery()
 
+    const isGetChatType = (data: any): data is IChat => 'data' in data
+
     const getData = async () => {
         await getChat(currentUrl as string)
             .then((res) => {
-                setMessages(res.data.chat.messages)
-                setContact(res.data.user)
+                if (isGetChatType(res)) {
+                    setMessages(res.data.chat.messages)
+                    setContact(res.data.user)
+                }
             }
             ).catch((e) => {
                 console.log(e)
             })
     }
 
-
     useEffect(() => {
-        setScrollEffect('instant')
+        setScrollEffect('auto')
         if (currentUrl) {
             let channel = pusher.subscribe(currentUrl) // channel = chat ID
             channel.unbind()
@@ -80,36 +92,36 @@ const Chat = () => {
                 refetch()
                 setMessages((prev) => [...prev!, data.newMessage])
             })
-            pusher.bind('new-channel', async (data: any) => {
-                //callback
-                console.log(data)
-            })
         }
-        getData()
+        if (currentUrl && currentUrl !== "/chat" && currentUrl !== 'chat/' && currentUrl !== 'chat') {
+            getData()
+        }
     }, [chatUrl])
 
     useEffect(() => {
         scrollToBottom(scrollEffect)
     }, [messages])
 
-    if (currentUrl === '' || null || undefined) {
-        return null
-    } else if (isLoading) {
-        return <Loading />
+    let chatHeader = (currentUrl && contact) ? (<ChatHeader username={contact.username} avatar={contact.avatar} />) : null
+
+    let messagesList = messages ? (messages.map((message: Message, index) => {
+        return (
+            <Message userId={message.userId} timestamp={message.timestamp} body={message.body} key={index} />
+        )
+    })
+    ) : null
+
+    if (currentUrl === '' || null || undefined || currentUrl === 'chat') return <></>
+    if (isLoading) return <Loading />
+    if (error) {
+        throw new Error('Chat not found')
     } else {
         return (
             <div className="chat-area">
-                <ChatHeader username={contact.username} avatar={contact.avatar} />
+                {chatHeader}
                 <div className="chat" id="chat" ref={chatRef}>
                     <ul id="chat-list">
-                        <li id='top'></li>
-                        {messages.map((message: Message, index) => {
-                            return (
-                                <Message userId={message.userId} timestamp={message.timestamp} body={message.body} key={index} />
-                            )
-                        })
-                        }
-                        <li id='bottom'></li>
+                        {messagesList}
                     </ul>
                 </div>
                 <ChatInput chatId={currentUrl} />

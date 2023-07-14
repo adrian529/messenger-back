@@ -1,21 +1,20 @@
 import { Outlet } from "react-router-dom";
 import { useEffect } from 'react'
 import { useGetUserInfoQuery } from "./authApiSlice";
-interface User {
-    username: string;
-    avatar: string;
-    contacts: [string];
-    _id: string;
-    email: string
-}
-type T = Awaited<Promise<PromiseLike<object>>>
+import { useNavigate } from "react-router-dom";
+
 const PersistCredentials = () => {
 
-    useGetUserInfoQuery()
-    let content
+    const { isError } = useGetUserInfoQuery()
+    const navigate = useNavigate()
 
-    content = <Outlet />
+    useEffect(() => {
+        if (isError) {
+            navigate('/auth')
 
-    return content
+        }
+    }, [isError])
+
+    return <Outlet />
 }
 export default PersistCredentials

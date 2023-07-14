@@ -1,14 +1,6 @@
-interface User {
-    username: string;
-    avatar: string;
-    contacts: [string];
-    _id: string;
-    email: string
-}
-
 import { apiSlice } from "../../app/api/apiSlice";
 import { setCredentials, logOut } from "./authSlice";
-import { useAppDispatch } from "../../app/hooks";
+
 export const authApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
         login: builder.mutation({
@@ -18,7 +10,6 @@ export const authApiSlice = apiSlice.injectEndpoints({
                 body: { ...credentials }
             })
         }),
-
         sendLogout: builder.mutation<any, void>({
             query: () => ({
                 url: '/auth/logout',
@@ -36,10 +27,9 @@ export const authApiSlice = apiSlice.injectEndpoints({
                 }
             }
         }),
-
         googleLogin: builder.mutation({
             query: codeFromGoogle => ({
-                url: `http://localhost:3000/auth/google?code=${codeFromGoogle}&redirect_uri=http://localhost:5173/auth/google`,
+                url: `http://localhost:3000/auth/google?code=${codeFromGoogle}&redirect_uri=http://localhost:4173/auth/google`,
                 method: 'GET',
                 credentials: 'include',
                 withCredentials: true,

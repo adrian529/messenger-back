@@ -1,7 +1,5 @@
 import { apiSlice } from "../../app/api/apiSlice";
-import { setCredentials } from "../auth/authSlice";
-import ContactRequest from "../contacts/ContactRequest";
-import { addNewContact } from "../auth/authSlice";
+
 export const userApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
 

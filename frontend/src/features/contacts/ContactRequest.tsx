@@ -1,27 +1,13 @@
 import { useAppDispatch } from "../../app/hooks"
 import { useGetUserQuery } from "../user/userApiSlice"
 import { useContactRequestResponseMutation } from "../user/userApiSlice"
-import { useEffect } from "react"
-import { useState } from "react"
 import Done from '@mui/icons-material/Done';
 import Close from '@mui/icons-material/Close';
-import { useAppSelector } from "../../app/hooks"
 type ContactProps = {
     contact: string;
 }
 
-interface IUser {
-    username: string;
-    avatar: string;
-    _id: string;
-    contacts: string[];
-    email: string;
-    contactRequests: string[]
-}
-
 const ContactRequest = (props: ContactProps) => {
-
-    const dispatch = useAppDispatch()
 
     const {
         data: user,
@@ -31,7 +17,7 @@ const ContactRequest = (props: ContactProps) => {
 
     const [contactReponse] = useContactRequestResponseMutation()
 
-    const handleResponse = async (e: any, response: boolean) => {
+    const handleResponse = async (e: React.MouseEvent<SVGSVGElement, MouseEvent>, response: boolean) => {
         e.preventDefault()
         const id = user._id
         contactReponse({ id, response })
@@ -48,7 +34,6 @@ const ContactRequest = (props: ContactProps) => {
                         currentTarget.src = "https://i.ytimg.com/vi/VqWmSoWvQqo/mqdefault.jpg";
                     }}
                 />
-
                 <div className="contact-request_text">
                     {user.username}
                     <span className="contact-request_buttons">

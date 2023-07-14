@@ -194,7 +194,7 @@ h1 {
 
 .contact-img {
   width: 64px;
-  aspect-ratio: 1;
+  height: 64px;
   object-fit: cover;
   border-radius: 100%;
   flex-shrink: 0;
@@ -419,6 +419,62 @@ div.menu-notActive {
   border-radius: 1rem;
   color: black;
   cursor: pointer;
+}
+
+.missing-page {
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 2rem;
+}
+
+.login-section {
+  width: 100vw
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  max-width: min(85vw, 360px);
+  margin: 0 auto;
+}
+
+.login-form label {
+  font-size: 1.2rem;
+  align-self: center;
+  margin-bottom: 1rem;
+}
+
+.login-form-button {
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  justify-content: center;
+  color: black;
+  border: 2px solid rgb(167, 151, 255);
+  border-radius: 2rem;
+  font-size: 1.2rem;
+  padding: 1rem 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1.2rem;
+}
+
+.login-form-button p {
+  flex-grow: 1;
+}
+
+.login-form-button:hover {
+  transition: all 0.2s;
+  background-color: rgb(231, 226, 255);
+}
+
+.google-logo {
+  height: 2rem;
+  background-color: white;
+  border-radius: 50%;
+  padding: 0.3rem;
 }
 
 .mobile {

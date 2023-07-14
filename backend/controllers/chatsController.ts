@@ -56,8 +56,9 @@ const getContacts = async (req: TypedRequestBody<{ body: string, userId: string 
             } catch { }
         }
         return res.status(200).json({ contactsList })
-    } catch (err) {
-        return res.status(400).json({ message: "Chat not found." })
+    } catch (err: any) {
+        console.log(err)
+        return res.status(400).json(err.message)
     }
 
 }

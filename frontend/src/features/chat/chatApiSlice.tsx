@@ -1,14 +1,15 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import {
-    createSelector,
-    createEntityAdapter
-} from "@reduxjs/toolkit";
 
 interface Message {
     id: string;
     userId: string;
     body: string;
-    timestamp?: number;
+    timestamp: number;
+}
+interface newMessage {
+    id: string;
+    userId: string;
+    body: string;
 }
 
 interface IUser {
@@ -18,7 +19,6 @@ interface IUser {
 }
 
 interface IChat {
-    data: {
         user: IUser,
         chat: {
             users: [string],
@@ -26,7 +26,6 @@ interface IChat {
                 Message
             ]
         }
-    }
 }
 interface IContact {
     contactsList: [
@@ -34,7 +33,7 @@ interface IContact {
             chatId: string,
             id: string,
             targetUser: IUser,
-            lastMessage?: Message
+            lastMessage: Message
         }
     ]
 }
@@ -67,14 +66,8 @@ export const chatApi = createApi({
                 return sortedResponse
             }
         }),
-        /*         getChatBrief: builder.query<any, String>({
-                    query: (id: String) => ({
-                        url: `chat/${id}/last-msg`,
-                        credentials: 'include'
-                    }),
-                    providesTags: ['Chat'] as any,
-                }), */
-        sendMessage: builder.mutation<Message, Message>({
+
+        sendMessage: builder.mutation<void, newMessage>({
             query: ({ id, userId, body }) => ({
                 url: `chat/${id}`,
                 method: 'POST',

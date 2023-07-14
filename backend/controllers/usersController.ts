@@ -1,9 +1,6 @@
 import Express from 'express';
-import express from 'express';
 import User from '../models/User';
 import bcrypt from 'bcrypt'
-import { IUser } from '../../index'
-import axios from 'axios';
 import Chat from '../models/Chat';
 import Pusher = require('pusher');
 import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
@@ -22,9 +19,7 @@ const pusher = new Pusher({
 
 const addUser = async (req: TypedRequestBody<{ username: string, password: string }>, res: Express.Response) => {
     if (!req.body?.username || !req.body?.password) return res.status(400).json({ message: "username or password missing" })
-
     const { username, password } = req.body
-
     const duplicate = await User.findOne({ username }).lean().exec()
     if (duplicate) {
         return res.status(409).json({ message: "Account with this username already exists" })
@@ -45,7 +40,6 @@ const deleteContact = async (req: TypedRequestBody<{ username: string, password:
 
     const targetUsername = req.body.username
     const userId = req.cookies.user_id
-
     const targetUser = await User.findById(userId).lean()
     const foundUser = await User.findOne({ username: targetUsername }).lean()
 
@@ -82,10 +76,11 @@ const getUser = async (req: TypedRequestBody<{ username: string }>, res: Express
 const sendContactRequest = async (req: TypedRequestBody<{ username: string }>, res: Express.Response) => {
 
     if (!req.params.email || !req.cookies.user_id) return res.status(400)
+
     const targetEmail = req.params.email
     const userId = req.cookies.user_id
-
     let foundUser
+
     try {
         foundUser = await User.findOne({ email: targetEmail }).exec()
     } catch {
@@ -95,8 +90,7 @@ const sendContactRequest = async (req: TypedRequestBody<{ username: string }>, r
         return res.status(400).json({ message: "No user found" })
     }
 
-        //odkomentowac na produkcji, blokuje wysylanie requestow do siebie
-    //if (userId === foundUser.id) return res.status(400).json({ message: "Cannot send request to yourself" })
+    if (userId === foundUser.id) return res.status(400).json({ message: "Cannot send request to yourself" })
 
     if (foundUser.contactRequests?.indexOf(userId) === -1) {
         foundUser.contactRequests.push(userId)
@@ -152,7 +146,6 @@ const answerContactRequest = async (req: TypedRequestBody<{ id: string, response
     } catch (e: any) {
         return res.status(400).json(e.message)
     }
-
 }
 
 export {
