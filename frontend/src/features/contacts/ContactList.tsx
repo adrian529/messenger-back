@@ -63,7 +63,7 @@ const ContactList = () => {
                 })
             }
         } catch (e) {
-            console.log(contactRequests)
+            console.log(e)
         }
     }, [chats, requests, currentUser])
 

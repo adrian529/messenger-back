@@ -1,18 +1,12 @@
 import Express from 'express';
 import Chat from '../models/Chat';
 import User from '../models/User';
-import Pusher = require('pusher');
+import { pusherServer } from '../pusherServer';
 interface TypedRequestBody<T> extends Express.Request {
     body: T
 }
 
-const pusher = new Pusher({
-    appId: process.env.PUSHER_APP_ID as string,
-    key: process.env.PUSHER_KEY as string,
-    secret: process.env.PUSHER_SECRET as string,
-    cluster: process.env.PUSHER_CLUSTER as string,
-    useTLS: true
-});
+const pusher = pusherServer
 
 const getChat = async (req: TypedRequestBody<{ body: string, userId: string, chatId: string }>, res: Express.Response) => {
     const { chatId } = req.params
@@ -38,7 +32,7 @@ const getChat = async (req: TypedRequestBody<{ body: string, userId: string, cha
             return res.status(200).json({ chat, user })
         }
     } catch (err: any) {
-        console.log(err.stack)
+        console.log(err.message)
         return res.status(400).json({ message: "Chat not found." })
     }
 }

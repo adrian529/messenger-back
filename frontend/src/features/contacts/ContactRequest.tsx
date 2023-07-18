@@ -30,7 +30,6 @@ const ContactRequest = (props: ContactProps) => {
                 if (response === true && isContactReponseType(data)) {
                     const { newChatId } = data.data
                     dispatch(() => pushNewContact(newChatId))
-                    console.log(data)
                 }
             })
     }

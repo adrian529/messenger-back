@@ -11,9 +11,6 @@ function Login() {
     const [logout] = useSendLogoutMutation()
     let [googleLogin] = useGoogleLoginMutation()
 
-    let user = useAppSelector(state => selectCurrentUser(state))
-    console.log('user: ', user)
-
     const socialLogin = async () => {
         try {
             const { search } = location
@@ -27,7 +24,6 @@ function Login() {
     }
 
     const { pathname } = location;
-    console.log(pathname)
     if (pathname === '/auth/google') {
 
         useEffect(() => {

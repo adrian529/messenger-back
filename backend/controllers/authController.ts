@@ -38,11 +38,8 @@ const authWithGoogle = async (req: Express.Request, res: Express.Response) => {
         });
 
         const tokenFromGoogle = data.access_token;
-
-        console.log(data)
-
         const urlForGettingUserInfo = 'https://openidconnect.googleapis.com/v1/userinfo';
-
+    
         const userData = await axios({
             url: urlForGettingUserInfo,
             method: 'GET',
@@ -84,7 +81,6 @@ const authWithGoogle = async (req: Express.Request, res: Express.Response) => {
 }
 
 const pusherAuth = async (req: Express.Request, res: Express.Response) => {
-    console.log('eeeeeee', req.query)
     const query = req.query;
     const socketId: any = query.socket_id;
     const callback: any = query.callback
@@ -143,7 +139,7 @@ const getCredentials = async (req: Express.Request, res: Express.Response) => {
         const { username, contacts, avatar, email, id, contactRequests } = foundUser
         res.json({ username, contacts, avatar, email, id, contactRequests });
     } catch (error: any) {
-        console.log(error.stack)
+        console.log(error.message)
     }
 }
 
@@ -158,9 +154,9 @@ const handleLogout = async (req: Express.Request, res: Express.Response) => {
         }
         // Delete refreshToken in db
     } finally {
-        res.clearCookie('access_token', { httpOnly: true, sameSite: 'none', secure: true, path: '/' });
-        res.clearCookie('idToken', { httpOnly: true, sameSite: 'none', secure: true });
-        res.clearCookie('user_id', { httpOnly: true, sameSite: 'none', secure: true });
+        res.clearCookie('access_token', { sameSite: 'none', secure: true, path: '/' });
+        res.clearCookie('idToken', { sameSite: 'none', secure: true });
+        res.clearCookie('user_id', { sameSite: 'none', secure: true });
         return res.sendStatus(204);
     }
 }
