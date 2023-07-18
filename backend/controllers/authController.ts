@@ -39,7 +39,7 @@ const authWithGoogle = async (req: Express.Request, res: Express.Response) => {
 
         const tokenFromGoogle = data.access_token;
         const urlForGettingUserInfo = 'https://openidconnect.googleapis.com/v1/userinfo';
-    
+
         const userData = await axios({
             url: urlForGettingUserInfo,
             method: 'GET',
@@ -68,9 +68,9 @@ const authWithGoogle = async (req: Express.Request, res: Express.Response) => {
         foundUser.save()
         const idToken = data.id_token
         const userId = foundUser._id
-        res.cookie('idToken', idToken, { sameSite: "none", secure: true, maxAge: 24 * 60 * 60 * 1000 }) //24 hours
-        res.cookie('access_token', tokenFromGoogle, { sameSite: "none", secure: true, maxAge: 24 * 60 * 60 * 1000 }) //24 hours
-        res.cookie('user_id', userId, { sameSite: "none", secure: true, maxAge: 30 * 24 * 60 * 60 * 1000 }) //1 month
+        res.cookie('idToken', idToken, { httpOnly: true, sameSite: "none", secure: true, maxAge: 24 * 60 * 60 * 1000 }) //24 hours
+        res.cookie('access_token', tokenFromGoogle, { httpOnly: true, sameSite: "none", secure: true, maxAge: 24 * 60 * 60 * 1000 }) //24 hours
+        res.cookie('user_id', userId, { httpOnly: true, sameSite: "none", secure: true, maxAge: 30 * 24 * 60 * 60 * 1000 }) //1 month
         const { username, contacts, avatar, email, id } = foundUser
         res.json(foundUser);
 
@@ -154,9 +154,9 @@ const handleLogout = async (req: Express.Request, res: Express.Response) => {
         }
         // Delete refreshToken in db
     } finally {
-        res.clearCookie('access_token', { sameSite: 'none', secure: true, path: '/' });
-        res.clearCookie('idToken', { sameSite: 'none', secure: true });
-        res.clearCookie('user_id', { sameSite: 'none', secure: true });
+        res.clearCookie('access_token', { httpOnly: true, sameSite: 'none', secure: true, path: '/' });
+        res.clearCookie('idToken', { httpOnly: true, sameSite: 'none', secure: true });
+        res.clearCookie('user_id', { httpOnly: true, sameSite: 'none', secure: true });
         return res.sendStatus(204);
     }
 }

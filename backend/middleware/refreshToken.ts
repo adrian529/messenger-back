@@ -34,8 +34,8 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
         let accessToken = data.access_token
         let token = data.id_token
 
-        res.cookie('access_token', accessToken, { sameSite: "none", secure: true, maxAge: 24 * 60 * 60 * 1000 })
-        res.cookie('idToken', token, { sameSite: "none", secure: true, maxAge: 24 * 60 * 60 * 1000 })
+        res.cookie('access_token', accessToken, { httpOnly: true, sameSite: "none", secure: true, maxAge: 24 * 60 * 60 * 1000 })
+        res.cookie('idToken', token, { httpOnly: true, sameSite: "none", secure: true, maxAge: 24 * 60 * 60 * 1000 })
         req.cookies.access_token = accessToken
         next()
     } catch (err: any) {
