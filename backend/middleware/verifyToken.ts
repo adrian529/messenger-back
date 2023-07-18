@@ -3,6 +3,7 @@ import { OAuth2Client } from 'google-auth-library';
 import { refreshToken } from './refreshToken';
 
 export const verifyToken = (req: Request, res: Response, next: NextFunction) => {
+    try{
     if (!req.cookies.idToken) {
 
         throw new Error('no token provided');
@@ -24,5 +25,6 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
         .catch(err => {
             console.log(err.message)
             refreshToken(req, res, next)
-        });
+        })
+    }catch{}
 }
