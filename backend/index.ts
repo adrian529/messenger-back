@@ -49,7 +49,7 @@ app.get('/', (req: Request, res: Response) => {
     res.send('messaging app api');
 });
 
-app.listen(() => {
+app.listen(3000, () => {
     console.log(`Server is running`);
 });
 
