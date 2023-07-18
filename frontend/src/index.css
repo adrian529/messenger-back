@@ -521,6 +521,10 @@ div.menu-notActive {
     width: 100%;
   }
 
+  .chat{
+    height:100svh;
+  }
+
   .message {
     max-width: 85%;
   }

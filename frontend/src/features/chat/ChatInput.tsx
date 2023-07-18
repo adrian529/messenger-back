@@ -5,7 +5,6 @@ import { useAppSelector } from "../../app/hooks";
 import { selectCurrentUserId } from "../auth/authSlice";
 import { useSendMessageMutation } from './chatApiSlice';
 
-
 const ChatInput = (props: any) => {
 
     interface newMessage {
