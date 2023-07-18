@@ -107,7 +107,7 @@ const ContactList = () => {
             <div className={`sidebar ${isActiveMobile}`}>
                 <div className="current-user-card">
                     <div className="current-user-left">
-                        <img className="contact-img" alt="profile picture" src={currentUser.avatar || "https://i.ytimg.com/vi/VqWmSoWvQqo/mqdefault.jpg"}></img>
+                        <img className="contact-img" alt="profile picture" src={currentUser.avatar || "https://cdn-icons-png.flaticon.com/512/166/166347.png?w=826&t=st=1679619593~exp=1679620193~hmac=f34a680fa3d7d06914e0740ef84f42370e0aa2e2b33c467a4a4d0392ec31250a"}></img>
                         <div className="contact-name">{currentUser.username}</div>
                     </div>
                     <button className={`open-menu-button`} aria-label="menu" onClick={() => setActive(prev => !prev)}><ExpandMoreIcon className={menuActive} /></button>
