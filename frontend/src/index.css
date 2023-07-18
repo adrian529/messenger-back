@@ -501,7 +501,7 @@ div.menu-notActive {
   width: 0;
 }
 
-@media screen and (width < 767px) {
+@media screen and (width < 768px) {
 
   .mobile {
     visibility: visible;
@@ -520,10 +520,11 @@ div.menu-notActive {
 
   .chat-area {
     width: 100%;
+    position: fixed
   }
 
-  .chat{
-    height:100svh;
+  .chat {
+    background-color: white;
   }
 
   .message {
