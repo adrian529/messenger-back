@@ -23,10 +23,9 @@ app.use(bodyParser.json({ limit: '50mb', type: 'application/json' }));
 
 app.use((req, res, next) => {
     res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE, PATCH');
-    res.set('Access-Controll-Allow-Origin', process.env.BASE_URL)
+    res.set('Access-Control-Allow-Origin', process.env.BASE_URL)
     next();
 });
-
 
 app.use(cookieParser())
 
