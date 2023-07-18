@@ -2,6 +2,7 @@ import { formatDistanceToNow, parseJSON } from 'date-fns'
 import { useEffect, useState } from "react"
 import { useAppDispatch } from "../../app/hooks"
 import { setChattUrl } from "../auth/authSlice"
+import { IMessage } from '../../../..'
 
 type ContactProps = {
     chatId: string;
@@ -11,13 +12,7 @@ type ContactProps = {
         _id?: string
     };
     activeContact?: boolean;
-    lastMessage?: Message;
-}
-interface Message {
-    id: string;
-    userId: string;
-    body: string;
-    timestamp?: number;
+    lastMessage?: IMessage;
 }
 
 const Contact = (props: ContactProps) => {
@@ -31,7 +26,6 @@ const Contact = (props: ContactProps) => {
             timestamp: 0,
             userId: '',
         };
-
 
     useEffect(() => {
         if (lastMessage.timestamp !== undefined && lastMessage.timestamp > 0) {
@@ -54,7 +48,7 @@ const Contact = (props: ContactProps) => {
             window.history.pushState({}, "", (`/chat/${props.chatId}`));
             dispatch(setChattUrl());
             //window.location.replace(`/chat/${props.chatId}`)
-        }} >
+        }}>
             <img className="contact-img" alt="profile picture" src={props.targetUser.avatar}></img>
             <div className='contact-info'>
                 <div className="contact-name">{props.targetUser.username}</div>
@@ -65,7 +59,6 @@ const Contact = (props: ContactProps) => {
                     </time>
                 </div>
             </div>
-
         </div>
     )
 }

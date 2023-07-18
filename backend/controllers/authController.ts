@@ -6,9 +6,6 @@ import User from '../models/User';
 import { pusherServer } from '../pusherServer';
 
 const pusher = pusherServer
-interface TypedRequestBody<T> extends Express.Request {
-    body: T
-}
 
 interface IUser extends mongoose.Document {
     username: string;

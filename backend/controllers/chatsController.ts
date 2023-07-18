@@ -24,12 +24,15 @@ const getChat = async (req: TypedRequestBody<{ body: string, userId: string, cha
         const userId = req.cookies.user_id;
         if (req.params.lastmsg === 'last-msg') {
             const chat = await Chat.findOne({ _id: chatId }, { 'messages': { $slice: -1 }, '__v': 0, '_id': 0, 'users:': 0 }).lean()
+            if (!chat) return res.status(400).json({ message: "Chat not found." })
             const lastMessage = chat?.messages[0]
             const targetUserId = chat?.users.find(id => id !== userId)
             const user = await User.findOne({ _id: targetUserId }).select('username avatar').lean()
             return res.status(200).json({ lastMessage, user })
         } else {
             const chat = await Chat.findOne({ _id: chatId }, '-_id -__v').lean()
+            if (!chat) return res.status(400).json({ message: "Chat not found." })
+
             const targetUserId = chat?.users.find(id => id !== userId)
             const user = await User.findOne({ _id: targetUserId }).select('username avatar').lean()
             return res.status(200).json({ chat, user })
@@ -61,20 +64,6 @@ const getContacts = async (req: TypedRequestBody<{ body: string, userId: string 
         return res.status(400).json(err.message)
     }
 
-}
-const getFeed = async (req: TypedRequestBody<{ messageId: string, chatId: string }>, res: Express.Response) => {
-    const { chatId, messageId } = req.params
-    if (!chatId || !messageId) {
-        return res.status(400).json({ message: "Error. Please try again later." })
-    }
-
-    try {
-        const chat = await Chat.findOne({ _id: chatId }, '-_id -__v').lean()
-        return res.status(200).json(chat?.messages)
-    } catch (err: any) {
-        console.log(err.stack)
-        return res.status(400).json({ message: "Chat not found." })
-    }
 }
 
 const newChat = async (req: TypedRequestBody<{ userIds: string[], chatAdminId: string, chatName: string }>, res: Express.Response) => {

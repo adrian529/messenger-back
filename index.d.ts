@@ -7,11 +7,11 @@
     _id?: string;
 } */
 
-export interface Message {
+export interface IMessage {
     id: string;
     userId: string;
     body: string;
-    timestamp?: number;
+    timestamp: number;
 }
 
 export interface IUser {
@@ -21,20 +21,16 @@ export interface IUser {
 }
 
 export interface IChat {
-    data: {
         user: IUser,
         chat: {
             users: string[],
-            messages: Message[]
+            messages: IMessage[]
         }
-    }
 }
 
-/* 
-    username: String;
-    avatar?: String;
-    contacts: String[];
-    refreshToken?: String;
-    email?: String;
-    serviceProvider?: String;
-*/
+export interface IContact {
+    chatId: string,
+    id: string,
+    lastMessage: IMessage,
+    targetUser: IUser
+}

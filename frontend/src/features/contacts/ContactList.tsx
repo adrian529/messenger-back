@@ -1,7 +1,7 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { IUser, Message } from '../../../../index'
+import { IUser, IMessage } from '../../../../index'
 import { useAppSelector } from "../../app/hooks"
 import { pusherClient } from "../../app/pusherClient"
 import { useGetUserInfoQuery, useSendLogoutMutation } from "../auth/authApiSlice"
@@ -10,30 +10,31 @@ import { useGetContactsQuery } from "../chat/chatApiSlice"
 import AddContact from "../user/AddContact"
 import Contact from "./Contact"
 import ContactRequest from "./ContactRequest"
+import { Loading } from '../../assets/Loading'
 interface Icontact {
     chatId: string,
     id: string,
-    lastMessage: Message,
+    lastMessage: IMessage,
     targetUser: IUser
 }
 
 const ContactList = () => {
 
     const currentUser = useAppSelector(state => selectCurrentUser(state))
-    const chats: string[] = currentUser.contacts
-    const contactRequests: string[] = currentUser.contactRequests
+    const chats: string[] | null = currentUser.contacts
+    const contactRequests: string[] | null = currentUser.contactRequests
     const pusher = pusherClient
     const navigate = useNavigate()
-    const [requests, setRequests] = useState([])
+    const [requests, setRequests] = useState<string[]>([])
     const [active, setActive] = useState(false)
 
-    let chatUrl = useAppSelector(selectChatUrl)
+    let chatUrl: string = useAppSelector(selectChatUrl)
     let currentUrl = chatUrl ? chatUrl.split('/').pop() : null
 
     const [logout] = useSendLogoutMutation()
 
-    const handleLogout = () => {
-        logout()
+    const handleLogout = async () => {
+        await logout()
         navigate('/auth')
     }
     const { refetch: refetchCurrentUser } = useGetUserInfoQuery()
@@ -78,10 +79,12 @@ const ContactList = () => {
 
     let contactsList: Icontact[] = []
 
-
     const RequestsList = requests.length !== 0 ? (
         <>
             <div className="contact-requests">
+            <div className="contact-requests_header">
+                Contact Requests
+            </div>
                 {
                     requests.map((contact, index) => (
                         <ContactRequest contact={contact} key={index} />
@@ -98,7 +101,7 @@ const ContactList = () => {
         })
     }
 
-    const isActiveMobile = (chatUrl === null || chatUrl === '' || chatUrl === 'http://localhost:4173/') ? 'sidebar-active' : null
+    const isActiveMobile = (currentUrl === null || currentUrl === '' || currentUrl === '/') ? 'sidebar-active' : null
     if (!isLoading) {
         return (
             <div className={`sidebar ${isActiveMobile}`}>
@@ -107,7 +110,7 @@ const ContactList = () => {
                         <img className="contact-img" alt="profile picture" src={currentUser.avatar || "https://i.ytimg.com/vi/VqWmSoWvQqo/mqdefault.jpg"}></img>
                         <div className="contact-name">{currentUser.username}</div>
                     </div>
-                    <button className={`open-menu-button`} onClick={() => setActive(prev => !prev)}><ExpandMoreIcon className={menuActive} /></button>
+                    <button className={`open-menu-button`} aria-label="menu" onClick={() => setActive(prev => !prev)}><ExpandMoreIcon className={menuActive} /></button>
                 </div>
                 <div className={menuActive}>
                     <ul className="menu">
@@ -132,7 +135,11 @@ const ContactList = () => {
             </div>
         )
     } else {
-        return (<></>)
+        return (
+            <div className={`sidebar ${isActiveMobile}`}>
+                <Loading />
+            </div>
+        )
     }
 }
 

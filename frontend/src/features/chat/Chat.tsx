@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { IUser } from "../../../..";
+import { IUser, IChat, IMessage } from "../../../..";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { pusherClient } from "../../app/pusherClient";
 import { Loading } from "../../assets/Loading";
@@ -10,25 +10,10 @@ import ChatHeader from "./ChatHeader";
 import ChatInput from "./ChatInput";
 import Message from "./Message";
 import { useGetChatMutation } from "./chatApiSlice";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
+import { SerializedError } from "@reduxjs/toolkit";
 
 const Chat = () => {
-    interface Message {
-        userId: string;
-        body: string;
-        timestamp: string;
-    }
-
-    interface IChat {
-        data: {
-            user: IUser,
-            chat: {
-                users: [string],
-                messages: [
-                    Message
-                ]
-            }
-        }
-    }
 
     const chatRef = useRef<HTMLDivElement>(null);
     const scrollToBottom = (behavior: ScrollBehavior) => {
@@ -45,10 +30,10 @@ const Chat = () => {
     const dispatch = useAppDispatch()
     const pusher = pusherClient
     const { chatId } = useParams()
-    const [messages, setMessages] = useState<Message[] | undefined>([])
+    const [messages, setMessages] = useState<IMessage[] | undefined>([])
     const [contact, setContact] = useState<IUser | undefined>()
     const [scrollEffect, setScrollEffect] = useState<ScrollBehavior>('auto')
-    
+
     const [getChat, {
         isLoading,
         error
@@ -64,7 +49,7 @@ const Chat = () => {
         refetch
     } = useGetContactsQuery()
 
-    const isGetChatType = (data: any): data is IChat => 'data' in data
+    const isGetChatType = (data: { data: IChat; } | { error: FetchBaseQueryError | SerializedError; }): data is { data: IChat } => 'data' in data
 
     const getData = async () => {
         await getChat(currentUrl as string)
@@ -102,7 +87,7 @@ const Chat = () => {
 
     let chatHeader = (currentUrl && contact) ? (<ChatHeader username={contact.username} avatar={contact.avatar} />) : null
 
-    let messagesList = messages ? (messages.map((message: Message, index) => {
+    let messagesList = messages ? (messages.map((message: IMessage, index) => {
         return (
             <Message userId={message.userId} timestamp={message.timestamp} body={message.body} key={index} />
         )

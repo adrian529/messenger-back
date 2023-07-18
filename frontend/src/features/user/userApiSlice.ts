@@ -10,7 +10,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 credentials: 'include',
             }),
         }),
-        
+
         addContact: builder.mutation({
             query: (id: string) => ({
                 url: `/user/${id}`,
@@ -19,7 +19,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ['User'],
         }),
-        contactRequestResponse: builder.mutation({
+        contactRequestResponse: builder.mutation<{ newChatId: string }, { id: string, response: boolean }>({
             query: ({ id, response }) => ({
                 url: `/user/contact`,
                 body: {

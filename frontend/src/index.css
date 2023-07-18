@@ -6,6 +6,10 @@
   box-sizing: border-box;
 }
 
+button {
+  cursor: pointer;
+}
+
 :root {
   line-height: 1.5;
   font-weight: 400;
@@ -102,22 +106,33 @@ h1 {
   max-height: 100%;
   width: min(300px, 100%);
   flex-shrink: 0;
-  background-color: #eeeeee;
-  border-right: 2px solid #aaa;
+  background-color: #eee;
+  border-right: 2px solid #CCC;
 }
 
 .contact-list {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  padding-top: 1rem;
+  padding: 1rem 0.25rem 0;
   margin-bottom: auto;
+}
+
+.contact-requests_header {
+  text-align: center;
+  position: sticky;
+  top: 0px;
+  border-top: 2px solid #CCC;
+  border-bottom: 2px solid #CCC;
+  background-color: #eee;
+  padding: 5px;
 }
 
 .contact-requests {
   max-height: 25%;
   overflow-y: auto;
-  margin-top: auto;
+  flex-shrink: 0;
+  border-bottom: 2px solid #CCC;
 }
 
 .contact-requests p {
@@ -130,8 +145,11 @@ h1 {
 .contact-request {
   display: flex;
   padding: 5px 10px;
-  border-top: 2px solid #aaa;
+  border-bottom: 2px solid #CCC;
+}
 
+.contact-request:last-child {
+  border-bottom: 0;
 }
 
 .contact-request_text {
@@ -152,10 +170,14 @@ h1 {
 
 .contact-request_btn {
   flex-grow: 1;
-  margin: 0 15px;
-  border-radius: 10px;
-  cursor: pointer;
+  margin: 0 10px;
+  border-radius: 15px;
+  border: none;
   color: white;
+}
+
+.contact-request_btn svg {
+  height: 100%;
 }
 
 .contact-request_accept {
@@ -169,17 +191,18 @@ h1 {
 .contact {
   display: flex;
   align-items: center;
-  padding: 5px 10px;
+  padding: 5px;
   background-color: rgb(238, 238, 238);
   transition: all 0.1s;
+  border-radius: 10px;
 }
 
 .contact-active {
-  background-color: rgb(201, 201, 201);
+  background-color: #ccc;
 }
 
 .contact:hover {
-  background-color: #aaa;
+  background-color: #bbb;
   cursor: pointer;
   transition: all 0.1s;
 }
@@ -252,7 +275,7 @@ h1 {
 .contact-add_input {
   border: none;
   height: 100%;
-  background-color: #aaa;
+  background-color: #CCC;
   color: black;
 }
 
@@ -261,7 +284,6 @@ h1 {
   border: 0;
   color: black;
   margin: 10px 5px 0;
-  cursor: pointer;
 }
 
 .contact-add_btn svg {
@@ -280,6 +302,11 @@ h1 {
   background-color: #eeeeee;
   padding: 5px;
   min-height: 50px;
+}
+
+label[for="chat"] {
+  visibility: hidden;
+  width: 0;
 }
 
 .chat-input form {
@@ -324,7 +351,7 @@ h1 {
   top: 0px;
   min-height: 70px;
   align-items: center;
-  box-shadow: 0px 0px 5px #aaa;
+  box-shadow: 0px 0px 5px #CCC;
   z-index: 1
 }
 
@@ -357,7 +384,7 @@ h1 {
   justify-content: space-between;
   width: 100%;
   padding: 10px;
-  border-bottom: 2px solid #aaa;
+  border-bottom: 2px solid #CCC;
 }
 
 .current-user-left {
@@ -373,7 +400,6 @@ h1 {
   background: none;
   border: none;
   color: black;
-  cursor: pointer;
 }
 
 .open-menu-button .menu-active {
@@ -410,11 +436,10 @@ div.menu-notActive {
   width: 100%;
   padding: 0.5rem 2rem;
   background-color: transparent;
-  border: 2px solid #aaa;
+  border: 2px solid #CCC;
   outline: none;
   border-radius: 1rem;
   color: black;
-  cursor: pointer;
 }
 
 .missing-page {
@@ -446,13 +471,10 @@ div.menu-notActive {
   display: flex;
   align-items: center;
   background-color: transparent;
-  justify-content: center;
   color: black;
   border: 2px solid rgb(167, 151, 255);
   border-radius: 2rem;
-  font-size: 1.2rem;
   padding: 1rem 0.5rem;
-  cursor: pointer;
   transition: all 0.2s;
   font-size: 1.2rem;
 }

@@ -26,10 +26,10 @@ function App() {
         <Route index element={<Login />} />
         <Route path="google" element={<Login />} />
       </Route>
-      <Route path="/">
-        <Route element={<Layout />}>
-        <Route index element={<Chat />} />
-          <Route element={<PersistCredentials />}>
+      <Route element={<PersistCredentials />}>
+        <Route path="/">
+          <Route element={<Layout />}>
+            <Route index element={<Chat />} />
             <Route path="chat" element={<Chat />}>
               <Route path=":chatId" element={<Chat />} >
               </Route>

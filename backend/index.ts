@@ -8,15 +8,13 @@ import { authRoute } from './routes/authRoutes';
 import { chatRoute } from './routes/chatRoutes';
 import { usersRoute } from './routes/usersRoute';
 
-const port = process.env.PORT;
-
 const app: Express = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 const corsConfig = {
     credentials: true,
-    origin: ['http://localhost:4173', 'http://192.168.100.26:5173, http://127.0.0.1:4173, http://192.168.100.26:4173, http://127.0.0.1:5173'],
+    origin: process.env.BASE_URL,
 };
 
 app.use(cors(corsConfig))
@@ -25,7 +23,7 @@ app.use(bodyParser.json({ limit: '50mb', type: 'application/json' }));
 
 app.use((req, res, next) => {
     res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE, PATCH');
-    res.set('Access-Controll-Allow-Origin', ['http://localhost:4173', 'http://192.168.100.26:5173, http://127.0.0.1:4173, http://192.168.100.26:4173, http://127.0.0.1:5173'])
+    res.set('Access-Controll-Allow-Origin', process.env.BASE_URL)
     next();
 });
 
@@ -51,7 +49,7 @@ app.get('/', (req: Request, res: Response) => {
     res.send('messaging app api');
 });
 
-app.listen(port, () => {
-    console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+app.listen(() => {
+    console.log(`Server is running`);
 });
 

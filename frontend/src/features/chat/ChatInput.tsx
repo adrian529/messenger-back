@@ -41,9 +41,10 @@ const ChatInput = (props: any) => {
 
     return (
         <form className='chat-input' onSubmit={handleSendMessage}>
-            <TextareaAutosize className="chat-input_textarea" maxRows={9} value={message} onKeyDown={handleKeyPress}
+            <label htmlFor="chat">Chat Input</label>
+            <TextareaAutosize aria-label="chat" autoFocus className="chat-input_textarea" maxRows={9} value={message} onKeyDown={handleKeyPress}
                 onChange={(e) => setMessage(e.target.value)} />
-            <button className='chat-input_btn' type="submit"><Send /></button>
+            <button className='chat-input_btn' aria-label="send message" type="submit"><Send /></button>
         </form>
     )
 }

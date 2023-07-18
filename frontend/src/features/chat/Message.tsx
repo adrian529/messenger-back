@@ -5,7 +5,7 @@ import { selectCurrentUserId } from '../auth/authSlice';
 type MessageProps = {
     userId: string;
     body: string;
-    timestamp: string;
+    timestamp: number;
 }
 
 const Message = (props: MessageProps) => {

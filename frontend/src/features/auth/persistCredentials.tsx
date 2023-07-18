@@ -6,7 +6,6 @@ const PersistCredentials = () => {
 
     const { isError } = useGetUserInfoQuery()
     const navigate = useNavigate()
-
     useEffect(() => {
         if (isError) {
             navigate('/auth')

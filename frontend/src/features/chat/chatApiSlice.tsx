@@ -1,46 +1,19 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { IContact, IChat } from '../../../..';
 
-interface Message {
-    id: string;
-    userId: string;
-    body: string;
-    timestamp: number;
-}
 interface newMessage {
     id: string;
     userId: string;
     body: string;
 }
 
-interface IUser {
-    avatar: string,
-    username: string,
-    _id: string
-}
-
-interface IChat {
-        user: IUser,
-        chat: {
-            users: [string],
-            messages: [
-                Message
-            ]
-        }
-}
-interface IContact {
-    contactsList: [
-        {
-            chatId: string,
-            id: string,
-            targetUser: IUser,
-            lastMessage: Message
-        }
-    ]
+interface IContactList {
+    contactsList: IContact[]
 }
 
 export const chatApi = createApi({
     reducerPath: 'chatApi',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000' }),
+    baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API_URL }),
     tagTypes: ['Chat'],
 
     endpoints: (builder) => ({
@@ -56,13 +29,13 @@ export const chatApi = createApi({
                 credentials: 'include'
             }),
             providesTags: ['Chat'],
-            transformResponse: (responseData: IContact) => {
+            transformResponse: (responseData: IContactList) => {
                 let res = responseData.contactsList
                 const loadedContacts = res.map(contact => {
                     contact.id = contact.chatId
                     return contact
                 });
-                let sortedResponse = loadedContacts.sort((a, b) => b.lastMessage?.timestamp - a.lastMessage?.timestamp)
+                let sortedResponse = loadedContacts.sort((a, b) => b.lastMessage.timestamp - a.lastMessage.timestamp)
                 return sortedResponse
             }
         }),

@@ -29,6 +29,7 @@ const AddContact = () => {
             <form onSubmit={(event) => handleSubmit(id, event)} className="contact-add_form">
                 <input
                     type='text'
+                    name='add contact'
                     className='contact-add_input'
                     ref={ref as React.LegacyRef<HTMLInputElement>}
                     placeholder={'Add a new contact by email'}
