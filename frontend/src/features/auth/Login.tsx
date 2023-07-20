@@ -36,9 +36,13 @@ function Login() {
     } else {
         // the app continues with its normal logic
 
-        const { isError } = useGetUserInfoQuery()
-        if (!isError) {
-
+        const { isError, isLoading } = useGetUserInfoQuery()
+        if(isLoading) {
+            return (
+                <Loading />
+            )
+        }
+        if (!isLoading && !isError) {
             const content = (
                 <section className='login-section'>
                     <form className='login-form'>
@@ -54,7 +58,6 @@ function Login() {
             )
             return content
         } else {
-
             const queryParams = queryString.stringify({
                 client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID, // It must correspond to what we declared earlier in the backend
                 scope: 'profile email', // This is the user data you have access to, in our case its just the mail.
