@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: false }));
 
 const corsConfig = {
     credentials: true,
-    origin: process.env.BASE_URL,
+    origin: 'https://messenger-v9zk.onrender.com',
 };
 
 app.use(cors(corsConfig))
@@ -23,7 +23,7 @@ app.use(bodyParser.json({ limit: '50mb', type: 'application/json' }));
 
 app.use((req, res, next) => {
     res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE, PATCH');
-    res.set('Access-Control-Allow-Origin', process.env.BASE_URL)
+    res.set('Access-Control-Allow-Origin', 'https://messenger-v9zk.onrender.com')
     next();
 });
 
