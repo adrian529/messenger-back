@@ -16,8 +16,7 @@ function Login() {
             const { search } = location
             const codeFromGoogle = search.slice(6) // to get the value of the code query param.
             await googleLogin(codeFromGoogle)
-            window.location.replace('/')
-
+                .then(() => window.location.replace('/'))
         } catch (err) {
             console.error(err)
         }
