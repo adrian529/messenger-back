@@ -36,7 +36,7 @@ async function dbConnect() {
 
     console.log('DB connected');
 }
-dbConnect()
+
 
 app.use('/auth', authRoute)
 
@@ -48,7 +48,9 @@ app.get('/', (req: Request, res: Response) => {
     res.send('messaging app api');
 });
 
-app.listen(3000, () => {
-    console.log(`Server is running`);
-});
+dbConnect().then(()=>{
+    app.listen(3000, () => {
+        console.log(`Server is running`);
+    })
+})
 
