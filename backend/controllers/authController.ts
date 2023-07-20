@@ -69,12 +69,13 @@ const authWithGoogle = async (req: Express.Request, res: Express.Response) => {
         await foundUser.save()
         const idToken = data.id_token
         const userId = foundUser._id
-        res.cookie('idToken', idToken, { path: "/", httpOnly: true, sameSite: "none", secure: true, maxAge: 24 * 60 * 60 * 1000 }) //24 hours
-        res.cookie('access_token', tokenFromGoogle, { path: "/", httpOnly: true, sameSite: "none", secure: true, maxAge: 24 * 60 * 60 * 1000 }) //24 hours
-        res.cookie('user_id', userId, { path: "/", httpOnly: true, sameSite: "none", secure: true, maxAge: 30 * 24 * 60 * 60 * 1000 }) //1 month
+        
+        res.cookie('idToken', idToken, { httpOnly: true, secure: true, sameSite: 'None',  maxAge: 24 * 60 * 60 * 1000 }) //24 hours
+        res.cookie('access_token', tokenFromGoogle, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 }) //24 hours
+        res.cookie('user_id', userId, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 30 * 24 * 60 * 60 * 1000 }) //1 month
         const { username, contacts, avatar, email, id } = foundUser
         console.log(foundUser)
-        return res.json(foundUser);
+        res.json(foundUser);
 
     } catch (err: any) {
         console.log(err.message)
