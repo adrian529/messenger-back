@@ -20,13 +20,15 @@ export const chatApi = createApi({
         getChat: builder.mutation<IChat, string>({
             query: (id: string) => ({
                 url: `chat/${id}`,
-                credentials: 'include'
+                credentials: 'include',
+                withCredentials: true,
             }),
         }),
         getContacts: builder.query<any, void>({
             query: () => ({
                 url: `chat/contacts`,
-                credentials: 'include'
+                credentials: 'include',
+                withCredentials: true,
             }),
             providesTags: ['Chat'],
             transformResponse: (responseData: IContactList) => {
@@ -35,7 +37,7 @@ export const chatApi = createApi({
                     contact.id = contact.chatId
                     return contact
                 });
-                let sortedResponse = loadedContacts.sort((a, b) => b.lastMessage.timestamp - a.lastMessage.timestamp)
+                let sortedResponse = loadedContacts.sort((a, b) => b.lastMessage?.timestamp - a.lastMessage?.timestamp)
                 return sortedResponse
             }
         }),
@@ -45,6 +47,7 @@ export const chatApi = createApi({
                 url: `chat/${id}`,
                 method: 'POST',
                 credentials: 'include',
+                withCredentials: true,
                 body: { userId, body },
             }),
             invalidatesTags: ['Chat']
