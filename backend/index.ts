@@ -29,10 +29,10 @@ app.use((req, res, next) => {
 
 app.use(cookieParser())
 
-function dbConnect() {
+async function dbConnect() {
     let dbUrl = process.env.DATABASE_URL as string
     // 4. Connect to MongoDB
-    connect(dbUrl)
+    await connect(dbUrl)
 
     console.log('DB connected');
 }
