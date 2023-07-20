@@ -69,14 +69,13 @@ const authWithGoogle = async (req: Express.Request, res: Express.Response) => {
         await foundUser.save()
         const idToken = data.id_token
         const userId = foundUser._id
-        
-        res.cookie('idToken', idToken, { httpOnly: true, secure: true, sameSite: 'None',  maxAge: 24 * 60 * 60 * 1000 }) //24 hours
-        res.cookie('access_token', tokenFromGoogle, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 }) //24 hours
-        res.cookie('user_id', userId, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 30 * 24 * 60 * 60 * 1000 }) //1 month
+        res.cookie('idToken', idToken, { httpOnly: true, secure: true, sameSite: 'none', maxAge: 24 * 60 * 60 * 1000 }) //24 hours
+        res.cookie('access_token', tokenFromGoogle, { httpOnly: true, secure: true, sameSite: 'none', maxAge: 24 * 60 * 60 * 1000 }) //24 hours
+        res.cookie('user_id', userId, { httpOnly: true, secure: true, sameSite: 'none', maxAge: 30 * 24 * 60 * 60 * 1000 }) //1 month
         const { username, contacts, avatar, email, id } = foundUser
         console.log(foundUser)
         res.json(foundUser);
-
+        
     } catch (err: any) {
         console.log(err.message)
         return res.json(err)
@@ -93,7 +92,6 @@ const pusherAuth = async (req: Express.Request, res: Express.Response) => {
         const foundUser = await User.findOne({ _id: userId })
         if (!foundUser) return res.status(401).json({ message: "auth failed" })
         const { username, contacts, avatar, email } = foundUser
-
         const user = {
             id: userId,
             user_info: {
