@@ -8,6 +8,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 url: `/user/${id}`,
                 method: 'GET',
                 credentials: 'include',
+                withCredentials: true,
             }),
         }),
 
@@ -15,7 +16,8 @@ export const userApiSlice = apiSlice.injectEndpoints({
             query: (id: string) => ({
                 url: `/user/${id}`,
                 method: 'POST',
-                credentials: 'include'
+                credentials: 'include',
+                withCredentials: true,
             }),
             invalidatesTags: ['User'],
         }),
@@ -27,6 +29,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 },
                 method: 'POST',
                 credentials: 'include',
+                withCredentials: true,
             }),
             invalidatesTags: ['User'],
         }),
