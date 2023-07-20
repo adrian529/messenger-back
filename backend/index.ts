@@ -29,7 +29,7 @@ app.use((req, res, next) => {
 
 app.use(cookieParser())
 
-async function dbConnect() {
+function dbConnect() {
     let dbUrl = process.env.DATABASE_URL as string
     // 4. Connect to MongoDB
     await connect(dbUrl)
@@ -48,9 +48,9 @@ app.get('/', (req: Request, res: Response) => {
     res.send('messaging app api');
 });
 
-dbConnect().then(()=>{
+dbConnect()
+   
     app.listen(3000, () => {
-        console.log(`Server is running`);
-    })
+        console.log(`Server is running`)
 })
 
