@@ -3,19 +3,13 @@ import * as dotenv from 'dotenv'; // see https://github.com/motdotla/dotenv#how-
 import Express from 'express';
 import Chat from '../models/Chat';
 import User from '../models/User';
-import Pusher = require('pusher');
+import { pusherServer } from '../pusherServer';
 dotenv.config()
 
 interface TypedRequestBody<T> extends Express.Request {
     body: T
 }
-const pusher = new Pusher({
-    appId: process.env.PUSHER_APP_ID as string,
-    key: process.env.PUSHER_KEY as string,
-    secret: process.env.PUSHER_SECRET as string,
-    cluster: process.env.PUSHER_CLUSTER as string,
-    useTLS: true
-});
+const pusher = pusherServer
 
 const addUser = async (req: TypedRequestBody<{ username: string, password: string }>, res: Express.Response) => {
     if (!req.body?.username || !req.body?.password) return res.status(400).json({ message: "username or password missing" })
