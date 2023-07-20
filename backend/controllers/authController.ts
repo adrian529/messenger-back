@@ -72,7 +72,7 @@ const authWithGoogle = async (req: Express.Request, res: Express.Response) => {
         res.cookie('access_token', tokenFromGoogle, { httpOnly: true, sameSite: "none", secure: true, maxAge: 24 * 60 * 60 * 1000 }) //24 hours
         res.cookie('user_id', userId, { httpOnly: true, sameSite: "none", secure: true, maxAge: 30 * 24 * 60 * 60 * 1000 }) //1 month
         const { username, contacts, avatar, email, id } = foundUser
-        res.json(foundUser);
+        return res.status(200).json(foundUser);
 
     } catch (err: any) {
         console.log(err.message)
