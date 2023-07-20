@@ -12,7 +12,7 @@ interface IUser extends mongoose.Document {
     avatar: string;
     email: string;
     contactRequests: string[]
-    refreshToken?: string;
+    refreshToken: string;
     contacts?: string[];
 }
 
