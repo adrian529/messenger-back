@@ -66,7 +66,7 @@ const authWithGoogle = async (req: Express.Request, res: Express.Response) => {
         }
         //strore users' access token in DB
         foundUser.refreshToken = data.refresh_token
-        foundUser.save()
+        await foundUser.save()
         const idToken = data.id_token
         const userId = foundUser._id
         res.cookie('idToken', idToken, { httpOnly: true, sameSite: "none", secure: true, maxAge: 24 * 60 * 60 * 1000 }) //24 hours
